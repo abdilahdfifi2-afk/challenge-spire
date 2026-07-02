@@ -18,7 +18,7 @@ export const Route = createFileRoute("/predictions/$matchId")({
 
 type Market = {
   id: string; match_id: string; title: string; market_type: string;
-  entry_fee: number; commission_pct: number;
+  entry_fee: number; min_stake: number; max_stake: number; commission_pct: number;
   status: "open" | "closed" | "settled" | "cancelled" | "refunded";
   closes_at: string; winning_option_id: string | null;
 };
