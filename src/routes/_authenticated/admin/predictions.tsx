@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, CheckCircle2, Lock, Unlock, ChevronDown, ChevronUp, Trophy } from "lucide-react";
+import { Plus, Pencil, Trash2, CheckCircle2, Lock, Unlock, ChevronDown, ChevronUp, Trophy, RotateCcw } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/format";
 import { translateFinancialError } from "@/lib/rpc-errors";
 
