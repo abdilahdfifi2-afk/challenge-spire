@@ -24,6 +24,7 @@ const items = [
   { to: "/admin/tournaments", label: "البطولات", icon: Trophy },
   { to: "/admin/predictions", label: "التوقعات", icon: Target },
   { to: "/admin/disputes", label: "النزاعات", icon: AlertTriangle },
+  { to: "/admin/messages", label: "الدردشات", icon: MessagesSquare },
   { to: "/admin/logs", label: "سجل التدقيق", icon: ScrollText },
 ];
 
