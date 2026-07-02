@@ -26,6 +26,7 @@ const items = [
   { to: "/admin/disputes", label: "النزاعات", icon: AlertTriangle },
   { to: "/admin/messages", label: "الدردشات", icon: MessagesSquare },
   { to: "/admin/logs", label: "سجل التدقيق", icon: ScrollText },
+  { to: "/admin/settings", label: "الإعدادات", icon: Settings },
 ];
 
 function AdminLayout() {
