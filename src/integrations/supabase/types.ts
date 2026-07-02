@@ -584,6 +584,66 @@ export type Database = {
         }
         Relationships: []
       }
+      tournament_matches: {
+        Row: {
+          created_at: string
+          id: string
+          next_match_id: string | null
+          player1_id: string | null
+          player2_id: string | null
+          position: number
+          round: number
+          scheduled_at: string | null
+          status: string
+          tournament_id: string
+          updated_at: string
+          winner_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          next_match_id?: string | null
+          player1_id?: string | null
+          player2_id?: string | null
+          position: number
+          round: number
+          scheduled_at?: string | null
+          status?: string
+          tournament_id: string
+          updated_at?: string
+          winner_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          next_match_id?: string | null
+          player1_id?: string | null
+          player2_id?: string | null
+          position?: number
+          round?: number
+          scheduled_at?: string | null
+          status?: string
+          tournament_id?: string
+          updated_at?: string
+          winner_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tournament_matches_next_match_id_fkey"
+            columns: ["next_match_id"]
+            isOneToOne: false
+            referencedRelation: "tournament_matches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tournament_matches_tournament_id_fkey"
+            columns: ["tournament_id"]
+            isOneToOne: false
+            referencedRelation: "tournaments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tournament_participants: {
         Row: {
           id: string
@@ -898,6 +958,10 @@ export type Database = {
         }
         Returns: string
       }
+      generate_tournament_bracket: {
+        Args: { _tournament_id: string }
+        Returns: undefined
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -905,11 +969,16 @@ export type Database = {
         }
         Returns: boolean
       }
+      invite_to_challenge: {
+        Args: { _challenge_id: string; _username: string }
+        Returns: undefined
+      }
       is_challenge_participant: {
         Args: { _challenge_id: string; _user_id: string }
         Returns: boolean
       }
       join_challenge: { Args: { _challenge_id: string }; Returns: undefined }
+      join_tournament: { Args: { _tournament_id: string }; Returns: undefined }
       set_challenge_ready: {
         Args: { _challenge_id: string; _ready: boolean }
         Returns: string
@@ -917,6 +986,10 @@ export type Database = {
       submit_challenge_result: {
         Args: { _challenge_id: string; _winner: string }
         Returns: string
+      }
+      submit_tournament_match: {
+        Args: { _match_id: string; _winner: string }
+        Returns: undefined
       }
     }
     Enums: {

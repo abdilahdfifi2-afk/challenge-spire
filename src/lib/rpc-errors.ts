@@ -24,6 +24,18 @@ const MAP: Record<string, string> = {
   dispute_not_found: "النزاع غير موجود",
   already_resolved: "تم حل النزاع مسبقاً",
   not_pending: "هذا الطلب لم يعد معلّقاً",
+  not_in_lobby: "التحدي ليس في مرحلة اللوبي",
+  user_not_found: "لم يتم العثور على المستخدم",
+  cannot_invite_self: "لا يمكنك دعوة نفسك",
+  tournament_not_found: "البطولة غير موجودة",
+  tournament_not_open: "البطولة غير مفتوحة للتسجيل",
+  tournament_full: "البطولة مكتملة",
+  already_joined: "أنت مسجّل مسبقاً في هذه البطولة",
+  not_enough_players: "عدد اللاعبين غير كافٍ لإنشاء المخطط",
+  bracket_already_generated: "المخطط تم إنشاؤه مسبقاً",
+  invalid_status: "الحالة الحالية لا تسمح بهذا الإجراء",
+  match_not_found: "المباراة غير موجودة",
+  already_completed: "المباراة انتهت مسبقاً",
 };
 
 export function translateFinancialError(raw?: string | null): string {

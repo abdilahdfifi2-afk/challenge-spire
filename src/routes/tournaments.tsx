@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { formatCurrency, formatDate } from "@/lib/format";
@@ -21,7 +21,7 @@ function TournamentsPage() {
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
         {(list.data ?? []).length === 0 && <div className="card-elevated p-8 text-center text-muted-foreground col-span-full">لا توجد بطولات بعد.</div>}
         {list.data?.map((t: any) => (
-          <div key={t.id} className="card-elevated overflow-hidden group hover:border-primary/40 transition">
+          <Link key={t.id} to="/tournaments/$tournamentId" params={{ tournamentId: t.id }} className="card-elevated overflow-hidden group hover:border-primary/40 transition block">
             <div className="relative h-40 overflow-hidden">
               <img
                 src={t.banner_url || gameCover(t.games?.slug, t.game_id) || pickBanner(TOURNAMENT_BANNERS, t.id)}
@@ -32,7 +32,7 @@ function TournamentsPage() {
               {t.games?.name && <span className="absolute top-3 start-3 text-xs px-2 py-1 rounded-full bg-background/60 text-accent backdrop-blur">{t.games.name}</span>}
             </div>
             <div className="p-5">
-              <h3 className="font-display text-lg font-semibold">{t.title}</h3>
+              <h3 className="font-display text-lg font-semibold group-hover:text-primary transition-colors">{t.title}</h3>
               {t.description && <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{t.description}</p>}
               <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
                 <div><span className="text-muted-foreground">الرسوم:</span> {formatCurrency(t.entry_fee)}</div>
@@ -42,7 +42,7 @@ function TournamentsPage() {
               </div>
               {t.starts_at && <div className="mt-2 text-xs text-muted-foreground">تبدأ: {formatDate(t.starts_at)}</div>}
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>

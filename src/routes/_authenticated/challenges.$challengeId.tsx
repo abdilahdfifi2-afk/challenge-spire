@@ -9,7 +9,8 @@ import { ChallengeChat } from "@/components/challenge-chat";
 import { formatCurrency, formatDate } from "@/lib/format";
 import { gameCover } from "@/lib/media";
 import { translateFinancialError } from "@/lib/rpc-errors";
-import { ArrowRight, AlertTriangle, Trophy, XCircle, CheckCircle2, Timer } from "lucide-react";
+import { ArrowRight, AlertTriangle, Trophy, XCircle, CheckCircle2, Timer, UserPlus } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 export const Route = createFileRoute("/_authenticated/challenges/$challengeId")({
   head: () => ({ meta: [{ title: "تفاصيل التحدي — ArenaX" }] }),
@@ -146,9 +147,12 @@ function ChallengeDetailPage() {
               </div>
 
               {isParticipant && c.status === "open" && user?.id === c.creator_id && (
-                <Button variant="outline" onClick={cancelChallenge} className="mt-4 w-full gap-2 border-destructive/40 text-destructive hover:bg-destructive/10">
-                  <XCircle className="h-4 w-4" /> إلغاء التحدي واسترداد الرسوم
-                </Button>
+                <div className="mt-4 space-y-2">
+                  <InviteButton challengeId={c.id} />
+                  <Button variant="outline" onClick={cancelChallenge} className="w-full gap-2 border-destructive/40 text-destructive hover:bg-destructive/10">
+                    <XCircle className="h-4 w-4" /> إلغاء التحدي واسترداد الرسوم
+                  </Button>
+                </div>
               )}
 
               {isParticipant && (c.status === "accepted" || (c.status === "in_progress" && c.match_started_at && new Date(c.match_started_at) > new Date())) && (
@@ -240,6 +244,41 @@ function PlayerCard({ label, p, placeholder }: { label: string; p: any; placehol
     </div>
   );
 }
+
+function InviteButton({ challengeId }: { challengeId: string }) {
+  const [open, setOpen] = useState(false);
+  const [username, setUsername] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  const send = async () => {
+    if (!username.trim()) return;
+    setBusy(true);
+    const { error } = await supabase.rpc("invite_to_challenge", { _challenge_id: challengeId, _username: username.trim() });
+    setBusy(false);
+    if (error) { toast.error(translateFinancialError(error.message)); return; }
+    toast.success("تم إرسال الدعوة");
+    setUsername("");
+    setOpen(false);
+  };
+
+  if (!open) {
+    return (
+      <Button variant="outline" onClick={() => setOpen(true)} className="w-full gap-2">
+        <UserPlus className="h-4 w-4" /> دعوة لاعب باسم المستخدم
+      </Button>
+    );
+  }
+  return (
+    <div className="rounded-md border border-primary/30 bg-primary/5 p-3 space-y-2">
+      <Input placeholder="اسم المستخدم أو الاسم المعروض" value={username} onChange={(e) => setUsername(e.target.value)} />
+      <div className="flex gap-2">
+        <Button size="sm" onClick={send} disabled={busy || !username.trim()} className="flex-1">إرسال الدعوة</Button>
+        <Button size="sm" variant="ghost" onClick={() => setOpen(false)}>إلغاء</Button>
+      </div>
+    </div>
+  );
+}
+
 
 function MatchLobby({ challenge, userId }: { challenge: any; userId: string }) {
   const qc = useQueryClient();
