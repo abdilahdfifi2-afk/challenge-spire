@@ -223,3 +223,12 @@
 @utility animate-marquee { animation: marquee 40s linear infinite; }
 @utility animate-pulse-glow { animation: pulse-glow 3.5s ease-in-out infinite; }
 
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@utility animate-fade-in {
+  animation: fade-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+
