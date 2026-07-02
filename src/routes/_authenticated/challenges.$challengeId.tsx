@@ -54,12 +54,20 @@ function ChallengeDetailPage() {
     },
   });
 
+  const myResultQ = useQuery({
+    queryKey: ["challenge-my-result", challengeId, user?.id],
+    enabled: !!user,
+    queryFn: async () => (await supabase.from("match_results").select("id, claimed_winner, status").eq("challenge_id", challengeId).eq("submitted_by", user!.id).maybeSingle()).data,
+  });
+
   useEffect(() => {
     const ch = supabase.channel(`challenge-${challengeId}-rt`)
       .on("postgres_changes", { event: "*", schema: "public", table: "challenges", filter: `id=eq.${challengeId}` },
         () => qc.invalidateQueries({ queryKey: ["challenge", challengeId] }))
       .on("postgres_changes", { event: "*", schema: "public", table: "disputes", filter: `challenge_id=eq.${challengeId}` },
         () => qc.invalidateQueries({ queryKey: ["challenge-dispute", challengeId] }))
+      .on("postgres_changes", { event: "*", schema: "public", table: "match_results", filter: `challenge_id=eq.${challengeId}` },
+        () => qc.invalidateQueries({ queryKey: ["challenge-my-result", challengeId] }))
       .subscribe();
     return () => { supabase.removeChannel(ch); };
   }, [challengeId, qc]);
@@ -72,13 +80,7 @@ function ChallengeDetailPage() {
   const creator = parties[c.creator_id];
   const opponent = c.opponent_id ? parties[c.opponent_id] : null;
   const isParticipant = user && (user.id === c.creator_id || user.id === c.opponent_id);
-
-  // Query my submitted result (if any)
-  const myResultQ = useQuery({
-    queryKey: ["challenge-my-result", challengeId, user?.id],
-    enabled: !!user,
-    queryFn: async () => (await supabase.from("match_results").select("id, claimed_winner, status").eq("challenge_id", challengeId).eq("submitted_by", user!.id).maybeSingle()).data,
-  });
+  const myResult = myResultQ.data;
 
   const openDispute = async () => {
     if (!user || !isParticipant) return;
