@@ -146,9 +146,12 @@ function ChallengeDetailPage() {
               </div>
 
               {isParticipant && c.status === "open" && user?.id === c.creator_id && (
-                <Button variant="outline" onClick={cancelChallenge} className="mt-4 w-full gap-2 border-destructive/40 text-destructive hover:bg-destructive/10">
-                  <XCircle className="h-4 w-4" /> إلغاء التحدي واسترداد الرسوم
-                </Button>
+                <div className="mt-4 space-y-2">
+                  <InviteButton challengeId={c.id} />
+                  <Button variant="outline" onClick={cancelChallenge} className="w-full gap-2 border-destructive/40 text-destructive hover:bg-destructive/10">
+                    <XCircle className="h-4 w-4" /> إلغاء التحدي واسترداد الرسوم
+                  </Button>
+                </div>
               )}
 
               {isParticipant && (c.status === "accepted" || (c.status === "in_progress" && c.match_started_at && new Date(c.match_started_at) > new Date())) && (
