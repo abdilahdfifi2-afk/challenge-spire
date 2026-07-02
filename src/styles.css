@@ -175,3 +175,51 @@
   box-shadow: var(--shadow-card);
   border-radius: var(--radius-lg);
 }
+@utility glass {
+  background: color-mix(in oklab, var(--color-card) 55%, transparent);
+  backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid color-mix(in oklab, var(--color-primary) 22%, transparent);
+  box-shadow: 0 10px 40px -10px oklch(0 0 0 / 55%), inset 0 1px 0 oklch(1 0 0 / 6%);
+  border-radius: var(--radius-xl);
+}
+@utility glass-soft {
+  background: color-mix(in oklab, var(--color-card) 40%, transparent);
+  backdrop-filter: blur(14px);
+  border: 1px solid color-mix(in oklab, var(--color-border) 100%, transparent);
+  border-radius: var(--radius-lg);
+}
+@utility neon-ring {
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-primary) 60%, transparent),
+              0 0 24px color-mix(in oklab, var(--color-primary) 45%, transparent),
+              0 0 60px color-mix(in oklab, var(--color-accent) 25%, transparent);
+}
+@utility text-glow {
+  text-shadow: 0 0 24px color-mix(in oklab, var(--color-primary) 55%, transparent);
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(20px, -30px) scale(1.05); }
+}
+@keyframes float-alt {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-25px, 20px) scale(1.08); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px color-mix(in oklab, var(--color-primary) 40%, transparent); }
+  50% { box-shadow: 0 0 45px color-mix(in oklab, var(--color-primary) 70%, transparent), 0 0 80px color-mix(in oklab, var(--color-accent) 35%, transparent); }
+}
+@utility animate-float-slow { animation: float-slow 12s ease-in-out infinite; }
+@utility animate-float-alt { animation: float-alt 14s ease-in-out infinite; }
+@utility animate-shimmer { background-size: 200% 100%; animation: shimmer 3s linear infinite; }
+@utility animate-marquee { animation: marquee 40s linear infinite; }
+@utility animate-pulse-glow { animation: pulse-glow 3.5s ease-in-out infinite; }
+
