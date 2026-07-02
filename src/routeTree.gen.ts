@@ -18,10 +18,15 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
 import { Route as AuthenticatedWalletIndexRouteImport } from './routes/_authenticated/wallet.index'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
 import { Route as AuthenticatedWalletWithdrawRouteImport } from './routes/_authenticated/wallet.withdraw'
 import { Route as AuthenticatedWalletDepositRouteImport } from './routes/_authenticated/wallet.deposit'
 import { Route as AuthenticatedChallengesCreateRouteImport } from './routes/_authenticated/challenges.create'
+import { Route as AuthenticatedAdminWithdrawalsRouteImport } from './routes/_authenticated/admin/withdrawals'
+import { Route as AuthenticatedAdminDepositsRouteImport } from './routes/_authenticated/admin/deposits'
+import { Route as AuthenticatedAdminBanksRouteImport } from './routes/_authenticated/admin/banks'
 
 const TournamentsRoute = TournamentsRouteImport.update({
   id: '/tournaments',
@@ -67,12 +72,22 @@ const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedWalletIndexRoute =
   AuthenticatedWalletIndexRouteImport.update({
     id: '/wallet/',
     path: '/wallet/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRouteRoute,
+} as any)
 const AuthenticatedWalletWithdrawRoute =
   AuthenticatedWalletWithdrawRouteImport.update({
     id: '/wallet/withdraw',
@@ -91,6 +106,23 @@ const AuthenticatedChallengesCreateRoute =
     path: '/challenges/create',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAdminWithdrawalsRoute =
+  AuthenticatedAdminWithdrawalsRouteImport.update({
+    id: '/withdrawals',
+    path: '/withdrawals',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminDepositsRoute =
+  AuthenticatedAdminDepositsRouteImport.update({
+    id: '/deposits',
+    path: '/deposits',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminBanksRoute = AuthenticatedAdminBanksRouteImport.update({
+  id: '/banks',
+  path: '/banks',
+  getParentRoute: () => AuthenticatedAdminRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -100,10 +132,15 @@ export interface FileRoutesByFullPath {
   '/predictions': typeof PredictionsRoute
   '/reset-password': typeof ResetPasswordRoute
   '/tournaments': typeof TournamentsRoute
+  '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/profile': typeof AuthenticatedProfileRoute
+  '/admin/banks': typeof AuthenticatedAdminBanksRoute
+  '/admin/deposits': typeof AuthenticatedAdminDepositsRoute
+  '/admin/withdrawals': typeof AuthenticatedAdminWithdrawalsRoute
   '/challenges/create': typeof AuthenticatedChallengesCreateRoute
   '/wallet/deposit': typeof AuthenticatedWalletDepositRoute
   '/wallet/withdraw': typeof AuthenticatedWalletWithdrawRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
   '/wallet/': typeof AuthenticatedWalletIndexRoute
 }
 export interface FileRoutesByTo {
@@ -115,9 +152,13 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/tournaments': typeof TournamentsRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/admin/banks': typeof AuthenticatedAdminBanksRoute
+  '/admin/deposits': typeof AuthenticatedAdminDepositsRoute
+  '/admin/withdrawals': typeof AuthenticatedAdminWithdrawalsRoute
   '/challenges/create': typeof AuthenticatedChallengesCreateRoute
   '/wallet/deposit': typeof AuthenticatedWalletDepositRoute
   '/wallet/withdraw': typeof AuthenticatedWalletWithdrawRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
   '/wallet': typeof AuthenticatedWalletIndexRoute
 }
 export interface FileRoutesById {
@@ -130,10 +171,15 @@ export interface FileRoutesById {
   '/predictions': typeof PredictionsRoute
   '/reset-password': typeof ResetPasswordRoute
   '/tournaments': typeof TournamentsRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/_authenticated/admin/banks': typeof AuthenticatedAdminBanksRoute
+  '/_authenticated/admin/deposits': typeof AuthenticatedAdminDepositsRoute
+  '/_authenticated/admin/withdrawals': typeof AuthenticatedAdminWithdrawalsRoute
   '/_authenticated/challenges/create': typeof AuthenticatedChallengesCreateRoute
   '/_authenticated/wallet/deposit': typeof AuthenticatedWalletDepositRoute
   '/_authenticated/wallet/withdraw': typeof AuthenticatedWalletWithdrawRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/wallet/': typeof AuthenticatedWalletIndexRoute
 }
 export interface FileRouteTypes {
@@ -146,10 +192,15 @@ export interface FileRouteTypes {
     | '/predictions'
     | '/reset-password'
     | '/tournaments'
+    | '/admin'
     | '/profile'
+    | '/admin/banks'
+    | '/admin/deposits'
+    | '/admin/withdrawals'
     | '/challenges/create'
     | '/wallet/deposit'
     | '/wallet/withdraw'
+    | '/admin/'
     | '/wallet/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -161,9 +212,13 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/tournaments'
     | '/profile'
+    | '/admin/banks'
+    | '/admin/deposits'
+    | '/admin/withdrawals'
     | '/challenges/create'
     | '/wallet/deposit'
     | '/wallet/withdraw'
+    | '/admin'
     | '/wallet'
   id:
     | '__root__'
@@ -175,10 +230,15 @@ export interface FileRouteTypes {
     | '/predictions'
     | '/reset-password'
     | '/tournaments'
+    | '/_authenticated/admin'
     | '/_authenticated/profile'
+    | '/_authenticated/admin/banks'
+    | '/_authenticated/admin/deposits'
+    | '/_authenticated/admin/withdrawals'
     | '/_authenticated/challenges/create'
     | '/_authenticated/wallet/deposit'
     | '/_authenticated/wallet/withdraw'
+    | '/_authenticated/admin/'
     | '/_authenticated/wallet/'
   fileRoutesById: FileRoutesById
 }
@@ -258,12 +318,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProfileRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/wallet/': {
       id: '/_authenticated/wallet/'
       path: '/wallet'
       fullPath: '/wallet/'
       preLoaderRoute: typeof AuthenticatedWalletIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
     }
     '/_authenticated/wallet/withdraw': {
       id: '/_authenticated/wallet/withdraw'
@@ -286,10 +360,52 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedChallengesCreateRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/withdrawals': {
+      id: '/_authenticated/admin/withdrawals'
+      path: '/withdrawals'
+      fullPath: '/admin/withdrawals'
+      preLoaderRoute: typeof AuthenticatedAdminWithdrawalsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/deposits': {
+      id: '/_authenticated/admin/deposits'
+      path: '/deposits'
+      fullPath: '/admin/deposits'
+      preLoaderRoute: typeof AuthenticatedAdminDepositsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/banks': {
+      id: '/_authenticated/admin/banks'
+      path: '/banks'
+      fullPath: '/admin/banks'
+      preLoaderRoute: typeof AuthenticatedAdminBanksRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
   }
 }
 
+interface AuthenticatedAdminRouteRouteChildren {
+  AuthenticatedAdminBanksRoute: typeof AuthenticatedAdminBanksRoute
+  AuthenticatedAdminDepositsRoute: typeof AuthenticatedAdminDepositsRoute
+  AuthenticatedAdminWithdrawalsRoute: typeof AuthenticatedAdminWithdrawalsRoute
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
+  {
+    AuthenticatedAdminBanksRoute: AuthenticatedAdminBanksRoute,
+    AuthenticatedAdminDepositsRoute: AuthenticatedAdminDepositsRoute,
+    AuthenticatedAdminWithdrawalsRoute: AuthenticatedAdminWithdrawalsRoute,
+    AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+  }
+
+const AuthenticatedAdminRouteRouteWithChildren =
+  AuthenticatedAdminRouteRoute._addFileChildren(
+    AuthenticatedAdminRouteRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedChallengesCreateRoute: typeof AuthenticatedChallengesCreateRoute
   AuthenticatedWalletDepositRoute: typeof AuthenticatedWalletDepositRoute
@@ -298,6 +414,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRouteWithChildren,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedChallengesCreateRoute: AuthenticatedChallengesCreateRoute,
   AuthenticatedWalletDepositRoute: AuthenticatedWalletDepositRoute,
