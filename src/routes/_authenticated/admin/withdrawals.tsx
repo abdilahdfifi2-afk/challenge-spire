@@ -3,9 +3,9 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { formatCurrency, formatDate } from "@/lib/format";
+import { translateFinancialError } from "@/lib/rpc-errors";
 import { Check, X } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin/withdrawals")({
@@ -13,7 +13,6 @@ export const Route = createFileRoute("/_authenticated/admin/withdrawals")({
 });
 
 function WithdrawalsAdmin() {
-  const { user } = useAuth();
   const qc = useQueryClient();
   const [filter, setFilter] = useState<"all"|"pending"|"approved"|"rejected">("pending");
   const list = useQuery({
@@ -25,33 +24,17 @@ function WithdrawalsAdmin() {
     },
   });
 
-  const decide = async (w: any, status: "approved"|"rejected") => {
-    const note = window.prompt(status === "rejected" ? "سبب الرفض:" : "ملاحظة (اختياري):") ?? "";
-    if (status === "rejected" && !note) { toast.error("سبب الرفض مطلوب"); return; }
-    const { error } = await supabase.from("withdrawals").update({
-      status, admin_note: note, processed_by: user!.id, processed_at: new Date().toISOString(),
-    }).eq("id", w.id).eq("status", "pending");
-    if (error) { toast.error(error.message); return; }
-    if (status === "approved") {
-      const { data: wl } = await supabase.from("wallets").select("balance").eq("user_id", w.user_id).maybeSingle();
-      const cur = Number(wl?.balance ?? 0);
-      if (cur < Number(w.amount)) { toast.error("رصيد المستخدم لا يكفي"); return; }
-      const newBal = cur - Number(w.amount);
-      await supabase.from("wallets").update({ balance: newBal }).eq("user_id", w.user_id);
-      await supabase.from("wallet_transactions").insert({
-        user_id: w.user_id, type: "withdrawal", amount: w.amount, status: "completed",
-        reference_id: w.id, description: `سحب مقبول (${w.id.slice(0,8)})`, balance_after: newBal,
-      });
+  const decide = async (w: any, action: "approve"|"reject") => {
+    if (action === "reject") {
+      const note = window.prompt("سبب الرفض:") ?? "";
+      if (!note.trim()) { toast.error("سبب الرفض مطلوب"); return; }
+      const { error } = await supabase.rpc("admin_reject_withdrawal", { _wd_id: w.id, _note: note });
+      if (error) { toast.error(translateFinancialError(error.message)); return; }
+    } else {
+      const { error } = await supabase.rpc("admin_approve_withdrawal", { _wd_id: w.id });
+      if (error) { toast.error(translateFinancialError(error.message)); return; }
     }
-    await supabase.from("notifications").insert({
-      user_id: w.user_id,
-      title: status === "approved" ? "تم قبول طلب السحب" : "تم رفض طلب السحب",
-      body: `المبلغ ${formatCurrency(w.amount)} — ${note || ""}`,
-      type: status === "approved" ? "success" : "warning",
-      link: "/wallet",
-    });
-    await supabase.from("audit_logs").insert({ actor_id: user!.id, action: `withdrawal_${status}`, entity: "withdrawals", entity_id: w.id, meta: { amount: w.amount } });
-    toast.success("تم");
+    toast.success("تم تنفيذ العملية");
     qc.invalidateQueries({ queryKey: ["admin-wds"] });
   };
 
@@ -73,7 +56,8 @@ function WithdrawalsAdmin() {
             <th className="p-3">المستخدم</th><th className="p-3">الوسيلة</th><th className="p-3">صاحب الحساب</th><th className="p-3">رقم الحساب</th><th className="p-3">المبلغ</th><th className="p-3">الحالة</th><th className="p-3">التاريخ</th><th className="p-3">إجراءات</th>
           </tr></thead>
           <tbody>
-            {list.data?.length === 0 && <tr><td colSpan={8} className="p-8 text-center text-muted-foreground">لا توجد طلبات</td></tr>}
+            {list.isLoading && <tr><td colSpan={8} className="p-8 text-center text-muted-foreground">جاري التحميل…</td></tr>}
+            {!list.isLoading && list.data?.length === 0 && <tr><td colSpan={8} className="p-8 text-center text-muted-foreground">لا توجد طلبات</td></tr>}
             {list.data?.map((w: any) => (
               <tr key={w.id} className="border-t border-border">
                 <td className="p-3">{w.profiles?.display_name ?? w.profiles?.username}</td>
@@ -86,8 +70,8 @@ function WithdrawalsAdmin() {
                 <td className="p-3">
                   {w.status === "pending" && (
                     <div className="flex gap-1">
-                      <Button size="icon" variant="ghost" className="text-success" onClick={() => decide(w, "approved")}><Check className="h-4 w-4" /></Button>
-                      <Button size="icon" variant="ghost" className="text-destructive" onClick={() => decide(w, "rejected")}><X className="h-4 w-4" /></Button>
+                      <Button size="icon" variant="ghost" aria-label="قبول" className="text-success" onClick={() => decide(w, "approve")}><Check className="h-4 w-4" /></Button>
+                      <Button size="icon" variant="ghost" aria-label="رفض" className="text-destructive" onClick={() => decide(w, "reject")}><X className="h-4 w-4" /></Button>
                     </div>
                   )}
                 </td>
