@@ -48,6 +48,10 @@ const MAP: Record<string, string> = {
   need_min_two_options: "يجب إدخال خيارين على الأقل",
   market_has_entries: "لا يمكن الحذف — يوجد مشاركون",
   match_has_entries: "لا يمكن الحذف — توجد مشاركات مرتبطة",
+  invalid_stake: "مبلغ الرهان غير صالح",
+  stake_out_of_range: "مبلغ الرهان خارج الحد الأدنى/الأقصى المسموح",
+  invalid_min_stake: "الحد الأدنى للرهان غير صالح",
+  invalid_max_stake: "الحد الأقصى يجب أن يكون أكبر من الأدنى",
 };
 
 export function translateFinancialError(raw?: string | null): string {

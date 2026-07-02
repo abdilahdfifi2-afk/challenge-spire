@@ -469,6 +469,8 @@ export type Database = {
           id: string
           market_type: string
           match_id: string
+          max_stake: number
+          min_stake: number
           status: Database["public"]["Enums"]["market_status"]
           title: string
           updated_at: string
@@ -482,6 +484,8 @@ export type Database = {
           id?: string
           market_type?: string
           match_id: string
+          max_stake?: number
+          min_stake?: number
           status?: Database["public"]["Enums"]["market_status"]
           title: string
           updated_at?: string
@@ -495,6 +499,8 @@ export type Database = {
           id?: string
           market_type?: string
           match_id?: string
+          max_stake?: number
+          min_stake?: number
           status?: Database["public"]["Enums"]["market_status"]
           title?: string
           updated_at?: string
@@ -1228,9 +1234,10 @@ export type Database = {
         Args: {
           _closes_at: string
           _commission_pct: number
-          _entry_fee: number
           _market_type: string
           _match_id: string
+          _max_stake: number
+          _min_stake: number
           _options: string[]
           _title: string
         }
@@ -1278,9 +1285,10 @@ export type Database = {
         Args: {
           _closes_at: string
           _commission_pct: number
-          _entry_fee: number
           _market_id: string
           _market_type: string
+          _max_stake: number
+          _min_stake: number
           _title: string
         }
         Returns: undefined
@@ -1297,6 +1305,10 @@ export type Database = {
           _team2_name: string
           _tournament: string
         }
+        Returns: undefined
+      }
+      admin_void_market: {
+        Args: { _market_id: string; _reason?: string }
         Returns: undefined
       }
       cancel_challenge: { Args: { _challenge_id: string }; Returns: undefined }
@@ -1342,7 +1354,7 @@ export type Database = {
       join_challenge: { Args: { _challenge_id: string }; Returns: undefined }
       join_tournament: { Args: { _tournament_id: string }; Returns: undefined }
       place_prediction: {
-        Args: { _market_id: string; _option_id: string }
+        Args: { _market_id: string; _option_id: string; _stake: number }
         Returns: string
       }
       remove_friend: { Args: { _fid: string }; Returns: undefined }

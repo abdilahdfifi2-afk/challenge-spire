@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, CheckCircle2, Lock, Unlock, ChevronDown, ChevronUp, Trophy } from "lucide-react";
+import { Plus, Pencil, Trash2, CheckCircle2, Lock, Unlock, ChevronDown, ChevronUp, Trophy, RotateCcw } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/format";
 import { translateFinancialError } from "@/lib/rpc-errors";
 
@@ -176,7 +176,8 @@ function MarketsPanel({ matchId }: { matchId: string }) {
     const args = {
       _title: String(fd.get("title") || ""),
       _market_type: String(fd.get("market_type") || "custom"),
-      _entry_fee: parseFloat(String(fd.get("entry_fee") || "0")),
+      _min_stake: parseFloat(String(fd.get("min_stake") || "10")),
+      _max_stake: parseFloat(String(fd.get("max_stake") || "1000")),
       _commission_pct: parseFloat(String(fd.get("commission_pct") || "10")),
       _closes_at: new Date(String(fd.get("closes_at") || "")).toISOString(),
     };
@@ -193,6 +194,14 @@ function MarketsPanel({ matchId }: { matchId: string }) {
     qc.invalidateQueries({ queryKey: ["admin-markets", matchId] });
     qc.invalidateQueries({ queryKey: ["admin-market-options", matchId] });
   };
+
+  const voidMarket = async (id: string) => {
+    if (!confirm("إلغاء السوق ورد كل المبالغ (تعادل/إلغاء)؟")) return;
+    const { error } = await supabase.rpc("admin_void_market", { _market_id: id, _reason: "تعادل أو إلغاء" });
+    if (error) return toast.error(translateFinancialError(error.message));
+    toast.success("تم رد كل المبالغ");
+  };
+
 
   const setStatus = async (id: string, status: "open" | "closed") => {
     const { error } = await supabase.rpc("admin_set_market_status", { _market_id: id, _status: status });
@@ -227,9 +236,11 @@ function MarketsPanel({ matchId }: { matchId: string }) {
               <div><Label>العنوان</Label><Input name="title" required defaultValue={editing?.title} placeholder="الفائز بالمباراة" /></div>
               <div><Label>نوع السوق (مفتاح)</Label><Input name="market_type" defaultValue={editing?.market_type || "winner"} /></div>
               <div className="grid grid-cols-2 gap-2">
-                <div><Label>رسوم المشاركة (د.م)</Label><Input type="number" step="0.01" name="entry_fee" required defaultValue={editing?.entry_fee ?? 10} /></div>
-                <div><Label>عمولة %</Label><Input type="number" step="0.5" name="commission_pct" required defaultValue={editing?.commission_pct ?? 10} /></div>
+                <div><Label>الحد الأدنى للرهان (د.م)</Label><Input type="number" step="1" name="min_stake" required defaultValue={editing?.min_stake ?? 10} /></div>
+                <div><Label>الحد الأقصى للرهان (د.م)</Label><Input type="number" step="1" name="max_stake" required defaultValue={editing?.max_stake ?? 1000} /></div>
               </div>
+              <div><Label>عمولة % (من مجموع الرهانات)</Label><Input type="number" step="0.5" name="commission_pct" required defaultValue={editing?.commission_pct ?? 10} /></div>
+
               <div><Label>يغلق في</Label>
                 <Input type="datetime-local" name="closes_at" required
                   defaultValue={editing?.closes_at ? new Date(editing.closes_at).toISOString().slice(0, 16) : ""} />
@@ -255,7 +266,8 @@ function MarketsPanel({ matchId }: { matchId: string }) {
             <div className="flex items-center gap-2 flex-wrap">
               <span className="font-semibold text-sm">{mk.title}</span>
               <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted">{mk.status}</span>
-              <span className="text-xs text-muted-foreground">رسوم {formatCurrency(mk.entry_fee)}</span>
+              <span className="text-xs text-muted-foreground">رهان {formatCurrency(mk.min_stake ?? 0)} - {formatCurrency(mk.max_stake ?? 0)}</span>
+              <span className="text-xs text-muted-foreground">عمولة {mk.commission_pct}%</span>
               <span className="text-xs text-muted-foreground">مشاركون: {entries.length}</span>
               <span className="text-xs text-primary font-semibold">مجموع: {formatCurrency(pool)}</span>
               <span className="text-xs text-muted-foreground ms-auto">يغلق: {formatDate(mk.closes_at)}</span>
@@ -282,6 +294,11 @@ function MarketsPanel({ matchId }: { matchId: string }) {
               {["open", "closed"].includes(mk.status) && (
                 <Button size="sm" variant={settling?.id === mk.id ? "default" : "outline"} onClick={() => setSettling(settling?.id === mk.id ? null : mk)}>
                   <Trophy className="h-3.5 w-3.5 me-1" /> {settling?.id === mk.id ? "إلغاء" : "تسوية النتيجة"}
+                </Button>
+              )}
+              {["open", "closed"].includes(mk.status) && (
+                <Button size="sm" variant="outline" onClick={() => voidMarket(mk.id)}>
+                  <RotateCcw className="h-3.5 w-3.5 me-1" /> تعادل / رد المبالغ
                 </Button>
               )}
               <Button size="sm" variant="ghost" onClick={() => { setEditing(mk); setOpenMk(true); }}><Pencil className="h-3.5 w-3.5" /></Button>
