@@ -1,0 +1,14 @@
+{
+  "name": "ArenaX — منصة الألعاب التنافسية",
+  "short_name": "ArenaX",
+  "description": "منصة التحديات والبطولات والمسابقات مع جوائز حقيقية بالدرهم المغربي.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a12",
+  "theme_color": "#7c3aed",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    { "src": "/favicon.ico", "sizes": "any", "type": "image/x-icon" }
+  ]
+}
