@@ -92,8 +92,74 @@ function ProfilePage() {
           {saving ? "جاري الحفظ..." : "حفظ التغييرات"}
         </Button>
       </form>
+
+      <MatchHistory userId={user?.id} />
     </div>
   );
+}
+
+function MatchHistory({ userId }: { userId?: string }) {
+  const q = useQuery({
+    queryKey: ["match-history", userId],
+    enabled: !!userId,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("challenges")
+        .select("id, title, status, entry_fee, prize, created_at, creator_id, opponent_id, games(name), match_results(claimed_winner, status)")
+        .or(`creator_id.eq.${userId},opponent_id.eq.${userId}`)
+        .order("created_at", { ascending: false })
+        .limit(30);
+      return data ?? [];
+    },
+  });
+
+  const rows = q.data ?? [];
+
+  return (
+    <div className="card-elevated p-6">
+      <h2 className="font-display text-xl font-semibold mb-4 flex items-center gap-2">
+        <Swords className="h-5 w-5 text-primary" /> سجل المباريات
+      </h2>
+      {rows.length === 0 && <p className="text-sm text-muted-foreground">لم تلعب أي مباراة بعد.</p>}
+      <div className="space-y-2">
+        {rows.map((c: any) => {
+          const isFinal = c.status === "completed";
+          const confirmed = (c.match_results ?? []).find((r: any) => r.status === "confirmed");
+          const winnerId = confirmed?.claimed_winner;
+          const iWon = winnerId && winnerId === userId;
+          const iLost = winnerId && !iWon;
+          const opponent = c.creator_id === userId ? c.opponent_id : c.creator_id;
+          return (
+            <Link key={c.id} to="/challenges/$challengeId" params={{ challengeId: c.id }}
+              className="flex items-center justify-between rounded-md border border-border p-3 hover:bg-muted/30 transition">
+              <div className="min-w-0">
+                <div className="text-sm font-semibold truncate flex items-center gap-2">
+                  {isFinal && iWon && <Trophy className="h-4 w-4 text-yellow-400" />}
+                  {isFinal && iLost && <XCircle className="h-4 w-4 text-destructive" />}
+                  {c.title ?? "تحدي"} <span className="text-xs text-muted-foreground">· {c.games?.name}</span>
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  {opponent ? "ضد لاعب" : "بانتظار خصم"} · {formatDate(c.created_at)}
+                </div>
+              </div>
+              <div className="text-end">
+                <div className={`text-xs px-2 py-0.5 rounded-full ${isFinal ? (iWon ? "bg-success/15 text-success" : iLost ? "bg-destructive/15 text-destructive" : "bg-muted text-muted-foreground") : "bg-primary/15 text-primary"}`}>
+                  {isFinal ? (iWon ? "فوز" : iLost ? "خسارة" : "منتهي") : statusAr(c.status)}
+                </div>
+                {isFinal && iWon && <div className="text-xs font-bold text-neon mt-1">+{formatCurrency(c.prize)}</div>}
+                {isFinal && iLost && <div className="text-xs text-destructive mt-1">-{formatCurrency(c.entry_fee)}</div>}
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function statusAr(s: string) {
+  const m: Record<string, string> = { open: "مفتوح", accepted: "في اللوبي", in_progress: "قيد التنفيذ", awaiting_confirmation: "بانتظار", disputed: "نزاع", cancelled: "ملغى" };
+  return m[s] ?? s;
 }
 
 function Stat({ label, value }: { label: string; value: any }) {
