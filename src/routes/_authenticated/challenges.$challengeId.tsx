@@ -9,7 +9,8 @@ import { ChallengeChat } from "@/components/challenge-chat";
 import { formatCurrency, formatDate } from "@/lib/format";
 import { gameCover } from "@/lib/media";
 import { translateFinancialError } from "@/lib/rpc-errors";
-import { ArrowRight, AlertTriangle, Trophy, XCircle, CheckCircle2, Timer } from "lucide-react";
+import { ArrowRight, AlertTriangle, Trophy, XCircle, CheckCircle2, Timer, UserPlus } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 export const Route = createFileRoute("/_authenticated/challenges/$challengeId")({
   head: () => ({ meta: [{ title: "تفاصيل التحدي — ArenaX" }] }),
