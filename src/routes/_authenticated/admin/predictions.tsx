@@ -236,9 +236,11 @@ function MarketsPanel({ matchId }: { matchId: string }) {
               <div><Label>العنوان</Label><Input name="title" required defaultValue={editing?.title} placeholder="الفائز بالمباراة" /></div>
               <div><Label>نوع السوق (مفتاح)</Label><Input name="market_type" defaultValue={editing?.market_type || "winner"} /></div>
               <div className="grid grid-cols-2 gap-2">
-                <div><Label>رسوم المشاركة (د.م)</Label><Input type="number" step="0.01" name="entry_fee" required defaultValue={editing?.entry_fee ?? 10} /></div>
-                <div><Label>عمولة %</Label><Input type="number" step="0.5" name="commission_pct" required defaultValue={editing?.commission_pct ?? 10} /></div>
+                <div><Label>الحد الأدنى للرهان (د.م)</Label><Input type="number" step="1" name="min_stake" required defaultValue={editing?.min_stake ?? 10} /></div>
+                <div><Label>الحد الأقصى للرهان (د.م)</Label><Input type="number" step="1" name="max_stake" required defaultValue={editing?.max_stake ?? 1000} /></div>
               </div>
+              <div><Label>عمولة % (من مجموع الرهانات)</Label><Input type="number" step="0.5" name="commission_pct" required defaultValue={editing?.commission_pct ?? 10} /></div>
+
               <div><Label>يغلق في</Label>
                 <Input type="datetime-local" name="closes_at" required
                   defaultValue={editing?.closes_at ? new Date(editing.closes_at).toISOString().slice(0, 16) : ""} />
