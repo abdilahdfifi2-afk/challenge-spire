@@ -241,12 +241,91 @@ function PlayerCard({ label, p, placeholder }: { label: string; p: any; placehol
   );
 }
 
+function MatchLobby({ challenge, userId }: { challenge: any; userId: string }) {
+  const qc = useQueryClient();
+  const [now, setNow] = useState(() => Date.now());
+  const [busy, setBusy] = useState(false);
+  const isCreator = userId === challenge.creator_id;
+  const myReady = isCreator ? !!challenge.creator_ready : !!challenge.opponent_ready;
+  const otherReady = isCreator ? !!challenge.opponent_ready : !!challenge.creator_ready;
+  const startAt = challenge.match_started_at ? new Date(challenge.match_started_at).getTime() : null;
+  const countdown = startAt ? Math.max(0, Math.ceil((startAt - now) / 1000)) : null;
+
+  useEffect(() => {
+    if (!startAt) return;
+    const t = setInterval(() => setNow(Date.now()), 500);
+    return () => clearInterval(t);
+  }, [startAt]);
+
+  useEffect(() => {
+    if (countdown === 0) {
+      qc.invalidateQueries({ queryKey: ["challenge", challenge.id] });
+    }
+  }, [countdown, challenge.id, qc]);
+
+  const toggle = async () => {
+    setBusy(true);
+    const { error } = await supabase.rpc("set_challenge_ready", { _challenge_id: challenge.id, _ready: !myReady });
+    setBusy(false);
+    if (error) toast.error(translateFinancialError(error.message));
+    else qc.invalidateQueries({ queryKey: ["challenge", challenge.id] });
+  };
+
+  return (
+    <div className="mt-5 rounded-lg border border-primary/30 bg-gradient-to-br from-primary/10 to-accent/5 p-5">
+      <div className="flex items-center justify-between mb-4">
+        <div className="text-sm font-semibold flex items-center gap-2">
+          <Timer className="h-4 w-4 text-primary" /> غرفة اللوبي
+        </div>
+        {countdown !== null && countdown > 0 && (
+          <div className="text-2xl font-bold font-display text-primary tabular-nums animate-pulse">
+            {countdown}s
+          </div>
+        )}
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 mb-4">
+        <ReadyBadge label="أنت" ready={myReady} />
+        <ReadyBadge label="الخصم" ready={otherReady} />
+      </div>
+
+      {countdown !== null && countdown > 0 ? (
+        <div className="text-center text-sm text-muted-foreground">
+          الطرفان جاهزان — المباراة تبدأ خلال {countdown} ثانية…
+        </div>
+      ) : (
+        <Button
+          onClick={toggle}
+          disabled={busy}
+          variant={myReady ? "outline" : "default"}
+          className={`w-full gap-2 ${myReady ? "" : "gradient-primary text-primary-foreground border-0"}`}
+        >
+          <CheckCircle2 className="h-4 w-4" />
+          {myReady ? "إلغاء الجاهزية" : "أنا جاهز"}
+        </Button>
+      )}
+    </div>
+  );
+}
+
+function ReadyBadge({ label, ready }: { label: string; ready: boolean }) {
+  return (
+    <div className={`rounded-md border p-3 text-center ${ready ? "border-success bg-success/10" : "border-border bg-muted/20"}`}>
+      <div className="text-[11px] text-muted-foreground">{label}</div>
+      <div className={`text-sm font-semibold mt-1 flex items-center justify-center gap-1 ${ready ? "text-success" : "text-muted-foreground"}`}>
+        {ready ? <><CheckCircle2 className="h-4 w-4" /> جاهز</> : "غير جاهز"}
+      </div>
+    </div>
+  );
+}
+
 function statusLabel(s: string) {
-  const m: Record<string, string> = { open: "مفتوح", accepted: "مقبول", in_progress: "قيد التنفيذ", awaiting_confirmation: "بانتظار التأكيد", disputed: "نزاع", completed: "منتهي", cancelled: "ملغى" };
+  const m: Record<string, string> = { open: "مفتوح", accepted: "في اللوبي", in_progress: "قيد التنفيذ", awaiting_confirmation: "بانتظار التأكيد", disputed: "نزاع", completed: "منتهي", cancelled: "ملغى" };
   return m[s] ?? s;
 }
 function statusColor(s: string) {
   if (s === "open") return "bg-primary/15 text-primary";
+  if (s === "accepted") return "bg-accent/15 text-accent";
   if (s === "in_progress") return "bg-warning/15 text-warning";
   if (s === "completed") return "bg-success/15 text-success";
   if (s === "disputed" || s === "cancelled") return "bg-destructive/15 text-destructive";
