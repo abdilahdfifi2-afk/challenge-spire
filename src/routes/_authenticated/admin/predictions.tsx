@@ -176,7 +176,8 @@ function MarketsPanel({ matchId }: { matchId: string }) {
     const args = {
       _title: String(fd.get("title") || ""),
       _market_type: String(fd.get("market_type") || "custom"),
-      _entry_fee: parseFloat(String(fd.get("entry_fee") || "0")),
+      _min_stake: parseFloat(String(fd.get("min_stake") || "10")),
+      _max_stake: parseFloat(String(fd.get("max_stake") || "1000")),
       _commission_pct: parseFloat(String(fd.get("commission_pct") || "10")),
       _closes_at: new Date(String(fd.get("closes_at") || "")).toISOString(),
     };
@@ -193,6 +194,14 @@ function MarketsPanel({ matchId }: { matchId: string }) {
     qc.invalidateQueries({ queryKey: ["admin-markets", matchId] });
     qc.invalidateQueries({ queryKey: ["admin-market-options", matchId] });
   };
+
+  const voidMarket = async (id: string) => {
+    if (!confirm("إلغاء السوق ورد كل المبالغ (تعادل/إلغاء)؟")) return;
+    const { error } = await supabase.rpc("admin_void_market", { _market_id: id, _reason: "تعادل أو إلغاء" });
+    if (error) return toast.error(translateFinancialError(error.message));
+    toast.success("تم رد كل المبالغ");
+  };
+
 
   const setStatus = async (id: string, status: "open" | "closed") => {
     const { error } = await supabase.rpc("admin_set_market_status", { _market_id: id, _status: status });
