@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { formatCurrency, formatDate } from "@/lib/format";
 import { gameCover, pickBanner, TOURNAMENT_BANNERS } from "@/lib/media";
+import logoAsset from "@/assets/arenax-logo.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
