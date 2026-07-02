@@ -62,6 +62,11 @@ export function SiteHeader() {
                   <Wallet className="h-4 w-4" /> المحفظة
                 </Button>
               </Link>
+              <Link to="/friends" className="hidden md:inline-flex">
+                <Button variant="ghost" size="sm" className="gap-2">
+                  <UsersIcon className="h-4 w-4" /> الأصدقاء
+                </Button>
+              </Link>
               <Link to="/profile" className="hidden sm:inline-flex">
                 <Button variant="ghost" size="sm" className="gap-2">
                   <User className="h-4 w-4" /> الملف
