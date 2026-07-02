@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
@@ -9,7 +9,7 @@ import { ChallengeChat } from "@/components/challenge-chat";
 import { formatCurrency, formatDate } from "@/lib/format";
 import { gameCover } from "@/lib/media";
 import { translateFinancialError } from "@/lib/rpc-errors";
-import { ArrowRight, AlertTriangle, Trophy, XCircle } from "lucide-react";
+import { ArrowRight, AlertTriangle, Trophy, XCircle, CheckCircle2, Timer } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/challenges/$challengeId")({
   head: () => ({ meta: [{ title: "تفاصيل التحدي — ArenaX" }] }),
