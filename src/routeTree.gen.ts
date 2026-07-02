@@ -24,10 +24,12 @@ import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedWalletWithdrawRouteImport } from './routes/_authenticated/wallet.withdraw'
 import { Route as AuthenticatedWalletDepositRouteImport } from './routes/_authenticated/wallet.deposit'
 import { Route as AuthenticatedChallengesCreateRouteImport } from './routes/_authenticated/challenges.create'
+import { Route as AuthenticatedChallengesChallengeIdRouteImport } from './routes/_authenticated/challenges.$challengeId'
 import { Route as AuthenticatedAdminWithdrawalsRouteImport } from './routes/_authenticated/admin/withdrawals'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin/users'
 import { Route as AuthenticatedAdminTournamentsRouteImport } from './routes/_authenticated/admin/tournaments'
 import { Route as AuthenticatedAdminPredictionsRouteImport } from './routes/_authenticated/admin/predictions'
+import { Route as AuthenticatedAdminMessagesRouteImport } from './routes/_authenticated/admin/messages'
 import { Route as AuthenticatedAdminLogsRouteImport } from './routes/_authenticated/admin/logs'
 import { Route as AuthenticatedAdminGamesRouteImport } from './routes/_authenticated/admin/games'
 import { Route as AuthenticatedAdminDisputesRouteImport } from './routes/_authenticated/admin/disputes'
@@ -112,6 +114,12 @@ const AuthenticatedChallengesCreateRoute =
     path: '/challenges/create',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedChallengesChallengeIdRoute =
+  AuthenticatedChallengesChallengeIdRouteImport.update({
+    id: '/challenges/$challengeId',
+    path: '/challenges/$challengeId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminWithdrawalsRoute =
   AuthenticatedAdminWithdrawalsRouteImport.update({
     id: '/withdrawals',
@@ -133,6 +141,12 @@ const AuthenticatedAdminPredictionsRoute =
   AuthenticatedAdminPredictionsRouteImport.update({
     id: '/predictions',
     path: '/predictions',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminMessagesRoute =
+  AuthenticatedAdminMessagesRouteImport.update({
+    id: '/messages',
+    path: '/messages',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
 const AuthenticatedAdminLogsRoute = AuthenticatedAdminLogsRouteImport.update({
@@ -178,10 +192,12 @@ export interface FileRoutesByFullPath {
   '/admin/disputes': typeof AuthenticatedAdminDisputesRoute
   '/admin/games': typeof AuthenticatedAdminGamesRoute
   '/admin/logs': typeof AuthenticatedAdminLogsRoute
+  '/admin/messages': typeof AuthenticatedAdminMessagesRoute
   '/admin/predictions': typeof AuthenticatedAdminPredictionsRoute
   '/admin/tournaments': typeof AuthenticatedAdminTournamentsRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/admin/withdrawals': typeof AuthenticatedAdminWithdrawalsRoute
+  '/challenges/$challengeId': typeof AuthenticatedChallengesChallengeIdRoute
   '/challenges/create': typeof AuthenticatedChallengesCreateRoute
   '/wallet/deposit': typeof AuthenticatedWalletDepositRoute
   '/wallet/withdraw': typeof AuthenticatedWalletWithdrawRoute
@@ -202,10 +218,12 @@ export interface FileRoutesByTo {
   '/admin/disputes': typeof AuthenticatedAdminDisputesRoute
   '/admin/games': typeof AuthenticatedAdminGamesRoute
   '/admin/logs': typeof AuthenticatedAdminLogsRoute
+  '/admin/messages': typeof AuthenticatedAdminMessagesRoute
   '/admin/predictions': typeof AuthenticatedAdminPredictionsRoute
   '/admin/tournaments': typeof AuthenticatedAdminTournamentsRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/admin/withdrawals': typeof AuthenticatedAdminWithdrawalsRoute
+  '/challenges/$challengeId': typeof AuthenticatedChallengesChallengeIdRoute
   '/challenges/create': typeof AuthenticatedChallengesCreateRoute
   '/wallet/deposit': typeof AuthenticatedWalletDepositRoute
   '/wallet/withdraw': typeof AuthenticatedWalletWithdrawRoute
@@ -229,10 +247,12 @@ export interface FileRoutesById {
   '/_authenticated/admin/disputes': typeof AuthenticatedAdminDisputesRoute
   '/_authenticated/admin/games': typeof AuthenticatedAdminGamesRoute
   '/_authenticated/admin/logs': typeof AuthenticatedAdminLogsRoute
+  '/_authenticated/admin/messages': typeof AuthenticatedAdminMessagesRoute
   '/_authenticated/admin/predictions': typeof AuthenticatedAdminPredictionsRoute
   '/_authenticated/admin/tournaments': typeof AuthenticatedAdminTournamentsRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/admin/withdrawals': typeof AuthenticatedAdminWithdrawalsRoute
+  '/_authenticated/challenges/$challengeId': typeof AuthenticatedChallengesChallengeIdRoute
   '/_authenticated/challenges/create': typeof AuthenticatedChallengesCreateRoute
   '/_authenticated/wallet/deposit': typeof AuthenticatedWalletDepositRoute
   '/_authenticated/wallet/withdraw': typeof AuthenticatedWalletWithdrawRoute
@@ -256,10 +276,12 @@ export interface FileRouteTypes {
     | '/admin/disputes'
     | '/admin/games'
     | '/admin/logs'
+    | '/admin/messages'
     | '/admin/predictions'
     | '/admin/tournaments'
     | '/admin/users'
     | '/admin/withdrawals'
+    | '/challenges/$challengeId'
     | '/challenges/create'
     | '/wallet/deposit'
     | '/wallet/withdraw'
@@ -280,10 +302,12 @@ export interface FileRouteTypes {
     | '/admin/disputes'
     | '/admin/games'
     | '/admin/logs'
+    | '/admin/messages'
     | '/admin/predictions'
     | '/admin/tournaments'
     | '/admin/users'
     | '/admin/withdrawals'
+    | '/challenges/$challengeId'
     | '/challenges/create'
     | '/wallet/deposit'
     | '/wallet/withdraw'
@@ -306,10 +330,12 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/disputes'
     | '/_authenticated/admin/games'
     | '/_authenticated/admin/logs'
+    | '/_authenticated/admin/messages'
     | '/_authenticated/admin/predictions'
     | '/_authenticated/admin/tournaments'
     | '/_authenticated/admin/users'
     | '/_authenticated/admin/withdrawals'
+    | '/_authenticated/challenges/$challengeId'
     | '/_authenticated/challenges/create'
     | '/_authenticated/wallet/deposit'
     | '/_authenticated/wallet/withdraw'
@@ -435,6 +461,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedChallengesCreateRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/challenges/$challengeId': {
+      id: '/_authenticated/challenges/$challengeId'
+      path: '/challenges/$challengeId'
+      fullPath: '/challenges/$challengeId'
+      preLoaderRoute: typeof AuthenticatedChallengesChallengeIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin/withdrawals': {
       id: '/_authenticated/admin/withdrawals'
       path: '/withdrawals'
@@ -461,6 +494,13 @@ declare module '@tanstack/react-router' {
       path: '/predictions'
       fullPath: '/admin/predictions'
       preLoaderRoute: typeof AuthenticatedAdminPredictionsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/messages': {
+      id: '/_authenticated/admin/messages'
+      path: '/messages'
+      fullPath: '/admin/messages'
+      preLoaderRoute: typeof AuthenticatedAdminMessagesRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
     '/_authenticated/admin/logs': {
@@ -507,6 +547,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminDisputesRoute: typeof AuthenticatedAdminDisputesRoute
   AuthenticatedAdminGamesRoute: typeof AuthenticatedAdminGamesRoute
   AuthenticatedAdminLogsRoute: typeof AuthenticatedAdminLogsRoute
+  AuthenticatedAdminMessagesRoute: typeof AuthenticatedAdminMessagesRoute
   AuthenticatedAdminPredictionsRoute: typeof AuthenticatedAdminPredictionsRoute
   AuthenticatedAdminTournamentsRoute: typeof AuthenticatedAdminTournamentsRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
@@ -521,6 +562,7 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminDisputesRoute: AuthenticatedAdminDisputesRoute,
     AuthenticatedAdminGamesRoute: AuthenticatedAdminGamesRoute,
     AuthenticatedAdminLogsRoute: AuthenticatedAdminLogsRoute,
+    AuthenticatedAdminMessagesRoute: AuthenticatedAdminMessagesRoute,
     AuthenticatedAdminPredictionsRoute: AuthenticatedAdminPredictionsRoute,
     AuthenticatedAdminTournamentsRoute: AuthenticatedAdminTournamentsRoute,
     AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
@@ -536,6 +578,7 @@ const AuthenticatedAdminRouteRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedChallengesChallengeIdRoute: typeof AuthenticatedChallengesChallengeIdRoute
   AuthenticatedChallengesCreateRoute: typeof AuthenticatedChallengesCreateRoute
   AuthenticatedWalletDepositRoute: typeof AuthenticatedWalletDepositRoute
   AuthenticatedWalletWithdrawRoute: typeof AuthenticatedWalletWithdrawRoute
@@ -545,6 +588,8 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRouteWithChildren,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+  AuthenticatedChallengesChallengeIdRoute:
+    AuthenticatedChallengesChallengeIdRoute,
   AuthenticatedChallengesCreateRoute: AuthenticatedChallengesCreateRoute,
   AuthenticatedWalletDepositRoute: AuthenticatedWalletDepositRoute,
   AuthenticatedWalletWithdrawRoute: AuthenticatedWalletWithdrawRoute,
