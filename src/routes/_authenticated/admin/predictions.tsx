@@ -296,6 +296,11 @@ function MarketsPanel({ matchId }: { matchId: string }) {
                   <Trophy className="h-3.5 w-3.5 me-1" /> {settling?.id === mk.id ? "إلغاء" : "تسوية النتيجة"}
                 </Button>
               )}
+              {["open", "closed"].includes(mk.status) && (
+                <Button size="sm" variant="outline" onClick={() => voidMarket(mk.id)}>
+                  <RotateCcw className="h-3.5 w-3.5 me-1" /> تعادل / رد المبالغ
+                </Button>
+              )}
               <Button size="sm" variant="ghost" onClick={() => { setEditing(mk); setOpenMk(true); }}><Pencil className="h-3.5 w-3.5" /></Button>
               <Button size="sm" variant="ghost" onClick={() => del(mk.id)}><Trash2 className="h-3.5 w-3.5 text-red-400" /></Button>
             </div>
