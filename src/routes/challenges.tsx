@@ -99,7 +99,7 @@ function ChallengesPage() {
                     <Button size="sm" variant="outline">التفاصيل</Button>
                   </Link>
                   {c.status === "open" && user && user.id !== c.creator_id && (
-                    <Button size="sm" onClick={() => accept(c.id, Number(c.entry_fee))}>قبول</Button>
+                    <Button size="sm" onClick={() => accept(c.id)}>قبول</Button>
                   )}
                 </div>
               </div>
