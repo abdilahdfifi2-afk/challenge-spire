@@ -72,28 +72,33 @@ function ChallengesPage() {
           </div>
         )}
         {list.data?.map((c: any) => (
-          <div key={c.id} className="card-elevated p-5">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs text-accent font-semibold">{c.games?.name}</span>
-              <span className={`text-[10px] px-2 py-0.5 rounded-full ${statusColor(c.status)}`}>{statusLabel(c.status)}</span>
+          <div key={c.id} className="card-elevated overflow-hidden group">
+            <div className="relative h-36 overflow-hidden">
+              <img src={gameCover(c.games?.slug, c.game_id)} alt={c.games?.name ?? "لعبة"} loading="lazy"
+                className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" />
+              <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent" />
+              <span className="absolute top-2 start-2 text-xs text-accent font-semibold bg-background/60 backdrop-blur px-2 py-0.5 rounded">{c.games?.name}</span>
+              <span className={`absolute top-2 end-2 text-[10px] px-2 py-0.5 rounded-full backdrop-blur ${statusColor(c.status)}`}>{statusLabel(c.status)}</span>
             </div>
-            <h3 className="font-semibold">{c.title ?? "تحدي بدون عنوان"}</h3>
-            <p className="text-xs text-muted-foreground mt-1">من: {c.creator?.display_name ?? c.creator?.username}</p>
-            <div className="mt-4 flex items-center justify-between">
-              <div className="text-xs">
-                <div className="text-muted-foreground">الرسوم</div>
-                <div className="font-semibold">{formatCurrency(c.entry_fee)}</div>
+            <div className="p-5">
+              <h3 className="font-semibold">{c.title ?? "تحدي بدون عنوان"}</h3>
+              <p className="text-xs text-muted-foreground mt-1">من: {c.creator?.display_name ?? c.creator?.username}</p>
+              <div className="mt-4 flex items-center justify-between">
+                <div className="text-xs">
+                  <div className="text-muted-foreground">الرسوم</div>
+                  <div className="font-semibold">{formatCurrency(c.entry_fee)}</div>
+                </div>
+                <div className="text-xs text-end">
+                  <div className="text-muted-foreground">الجائزة</div>
+                  <div className="font-bold text-neon">{formatCurrency(c.prize)}</div>
+                </div>
               </div>
-              <div className="text-xs text-end">
-                <div className="text-muted-foreground">الجائزة</div>
-                <div className="font-bold text-neon">{formatCurrency(c.prize)}</div>
+              <div className="mt-4 pt-4 border-t border-border flex items-center justify-between text-xs">
+                <span className="text-muted-foreground">{formatDate(c.created_at)}</span>
+                {c.status === "open" && user && user.id !== c.creator_id && (
+                  <Button size="sm" onClick={() => accept(c.id, Number(c.entry_fee))}>قبول التحدي</Button>
+                )}
               </div>
-            </div>
-            <div className="mt-4 pt-4 border-t border-border flex items-center justify-between text-xs">
-              <span className="text-muted-foreground">{formatDate(c.created_at)}</span>
-              {c.status === "open" && user && user.id !== c.creator_id && (
-                <Button size="sm" onClick={() => accept(c.id, Number(c.entry_fee))}>قبول التحدي</Button>
-              )}
             </div>
           </div>
         ))}
