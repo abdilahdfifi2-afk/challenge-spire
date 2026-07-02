@@ -36,6 +36,9 @@ const MAP: Record<string, string> = {
   invalid_status: "الحالة الحالية لا تسمح بهذا الإجراء",
   match_not_found: "المباراة غير موجودة",
   already_completed: "المباراة انتهت مسبقاً",
+  cannot_friend_self: "لا يمكنك إرسال طلب صداقة لنفسك",
+  friendship_exists: "توجد علاقة صداقة بالفعل",
+  not_found: "غير موجود",
 };
 
 export function translateFinancialError(raw?: string | null): string {
