@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { formatCurrency, formatDate } from "@/lib/format";
+import { gameCover } from "@/lib/media";
 import { Swords, Plus } from "lucide-react";
 
 export const Route = createFileRoute("/challenges")({
@@ -22,7 +23,7 @@ function ChallengesPage() {
     queryFn: async () => {
       const { data } = await supabase
         .from("challenges")
-        .select("*, games(name), creator:profiles!challenges_creator_id_fkey(username, display_name)")
+        .select("*, games(name,slug), creator:profiles!challenges_creator_id_fkey(username, display_name)")
         .order("created_at", { ascending: false })
         .limit(50);
       return data ?? [];
