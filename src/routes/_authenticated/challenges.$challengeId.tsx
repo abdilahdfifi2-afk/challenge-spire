@@ -151,7 +151,11 @@ function ChallengeDetailPage() {
                 </Button>
               )}
 
-              {isParticipant && (c.status === "in_progress" || c.status === "awaiting_confirmation") && !disputeQ.data && (
+              {isParticipant && (c.status === "accepted" || (c.status === "in_progress" && c.match_started_at && new Date(c.match_started_at) > new Date())) && (
+                <MatchLobby challenge={c} userId={user!.id} />
+              )}
+
+              {isParticipant && c.status === "in_progress" && c.match_started_at && new Date(c.match_started_at) <= new Date() && !disputeQ.data && (
                 <div className="mt-5 rounded-md border border-primary/30 bg-primary/5 p-4">
                   <div className="flex items-center gap-2 text-sm font-semibold mb-3">
                     <Trophy className="h-4 w-4 text-primary" /> تقديم نتيجة المباراة
@@ -159,7 +163,6 @@ function ChallengeDetailPage() {
                   {myResult ? (
                     <div className="text-xs text-muted-foreground">
                       قدّمت نتيجتك: الفائز = <span className="font-semibold text-foreground">{myResult.claimed_winner === c.creator_id ? (creator?.display_name || creator?.username) : (opponent?.display_name || opponent?.username)}</span>
-                      {c.status === "awaiting_confirmation" && <span className="block mt-1">بانتظار تأكيد الخصم…</span>}
                     </div>
                   ) : (
                     <>
@@ -170,6 +173,24 @@ function ChallengeDetailPage() {
                       </div>
                     </>
                   )}
+                </div>
+              )}
+
+              {isParticipant && c.status === "awaiting_confirmation" && !disputeQ.data && myResult && (
+                <div className="mt-5 rounded-md border border-primary/30 bg-primary/5 p-4 text-xs text-muted-foreground">
+                  قدّمت نتيجتك — بانتظار تأكيد الخصم…
+                </div>
+              )}
+
+              {isParticipant && c.status === "awaiting_confirmation" && !disputeQ.data && !myResult && (
+                <div className="mt-5 rounded-md border border-primary/30 bg-primary/5 p-4">
+                  <div className="flex items-center gap-2 text-sm font-semibold mb-3">
+                    <Trophy className="h-4 w-4 text-primary" /> خصمك قدّم نتيجة — أكّد أو اعترض
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Button size="sm" onClick={() => submitResult(c.creator_id)}>ربح: {creator?.display_name || creator?.username}</Button>
+                    {c.opponent_id && <Button size="sm" onClick={() => submitResult(c.opponent_id)}>ربح: {opponent?.display_name || opponent?.username}</Button>}
+                  </div>
                 </div>
               )}
 
