@@ -24,7 +24,7 @@ function DisputesAdmin() {
   const resolve = async (d: any, winnerId: string | null, resolution: string) => {
     const { error } = await supabase.rpc("admin_resolve_dispute", {
       _dispute_id: d.id,
-      _winner: winnerId,
+      _winner: winnerId as any,
       _resolution: resolution,
     });
     if (error) { toast.error(translateFinancialError(error.message)); return; }

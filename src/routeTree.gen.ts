@@ -28,6 +28,7 @@ import { Route as AuthenticatedChallengesChallengeIdRouteImport } from './routes
 import { Route as AuthenticatedAdminWithdrawalsRouteImport } from './routes/_authenticated/admin/withdrawals'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin/users'
 import { Route as AuthenticatedAdminTournamentsRouteImport } from './routes/_authenticated/admin/tournaments'
+import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin/settings'
 import { Route as AuthenticatedAdminPredictionsRouteImport } from './routes/_authenticated/admin/predictions'
 import { Route as AuthenticatedAdminMessagesRouteImport } from './routes/_authenticated/admin/messages'
 import { Route as AuthenticatedAdminLogsRouteImport } from './routes/_authenticated/admin/logs'
@@ -137,6 +138,12 @@ const AuthenticatedAdminTournamentsRoute =
     path: '/tournaments',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminSettingsRoute =
+  AuthenticatedAdminSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminPredictionsRoute =
   AuthenticatedAdminPredictionsRouteImport.update({
     id: '/predictions',
@@ -194,6 +201,7 @@ export interface FileRoutesByFullPath {
   '/admin/logs': typeof AuthenticatedAdminLogsRoute
   '/admin/messages': typeof AuthenticatedAdminMessagesRoute
   '/admin/predictions': typeof AuthenticatedAdminPredictionsRoute
+  '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/tournaments': typeof AuthenticatedAdminTournamentsRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/admin/withdrawals': typeof AuthenticatedAdminWithdrawalsRoute
@@ -220,6 +228,7 @@ export interface FileRoutesByTo {
   '/admin/logs': typeof AuthenticatedAdminLogsRoute
   '/admin/messages': typeof AuthenticatedAdminMessagesRoute
   '/admin/predictions': typeof AuthenticatedAdminPredictionsRoute
+  '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/tournaments': typeof AuthenticatedAdminTournamentsRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/admin/withdrawals': typeof AuthenticatedAdminWithdrawalsRoute
@@ -249,6 +258,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/logs': typeof AuthenticatedAdminLogsRoute
   '/_authenticated/admin/messages': typeof AuthenticatedAdminMessagesRoute
   '/_authenticated/admin/predictions': typeof AuthenticatedAdminPredictionsRoute
+  '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/_authenticated/admin/tournaments': typeof AuthenticatedAdminTournamentsRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/admin/withdrawals': typeof AuthenticatedAdminWithdrawalsRoute
@@ -278,6 +288,7 @@ export interface FileRouteTypes {
     | '/admin/logs'
     | '/admin/messages'
     | '/admin/predictions'
+    | '/admin/settings'
     | '/admin/tournaments'
     | '/admin/users'
     | '/admin/withdrawals'
@@ -304,6 +315,7 @@ export interface FileRouteTypes {
     | '/admin/logs'
     | '/admin/messages'
     | '/admin/predictions'
+    | '/admin/settings'
     | '/admin/tournaments'
     | '/admin/users'
     | '/admin/withdrawals'
@@ -332,6 +344,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/logs'
     | '/_authenticated/admin/messages'
     | '/_authenticated/admin/predictions'
+    | '/_authenticated/admin/settings'
     | '/_authenticated/admin/tournaments'
     | '/_authenticated/admin/users'
     | '/_authenticated/admin/withdrawals'
@@ -489,6 +502,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminTournamentsRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/settings': {
+      id: '/_authenticated/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AuthenticatedAdminSettingsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/predictions': {
       id: '/_authenticated/admin/predictions'
       path: '/predictions'
@@ -549,6 +569,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminLogsRoute: typeof AuthenticatedAdminLogsRoute
   AuthenticatedAdminMessagesRoute: typeof AuthenticatedAdminMessagesRoute
   AuthenticatedAdminPredictionsRoute: typeof AuthenticatedAdminPredictionsRoute
+  AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
   AuthenticatedAdminTournamentsRoute: typeof AuthenticatedAdminTournamentsRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedAdminWithdrawalsRoute: typeof AuthenticatedAdminWithdrawalsRoute
@@ -564,6 +585,7 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminLogsRoute: AuthenticatedAdminLogsRoute,
     AuthenticatedAdminMessagesRoute: AuthenticatedAdminMessagesRoute,
     AuthenticatedAdminPredictionsRoute: AuthenticatedAdminPredictionsRoute,
+    AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
     AuthenticatedAdminTournamentsRoute: AuthenticatedAdminTournamentsRoute,
     AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
     AuthenticatedAdminWithdrawalsRoute: AuthenticatedAdminWithdrawalsRoute,
