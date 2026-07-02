@@ -1110,10 +1110,16 @@ export type Database = {
         Args: { _challenge_id: string; _ready: boolean }
         Returns: string
       }
-      submit_challenge_result: {
-        Args: { _challenge_id: string; _winner: string }
-        Returns: string
-      }
+      submit_challenge_result:
+        | { Args: { _challenge_id: string; _winner: string }; Returns: string }
+        | {
+            Args: {
+              _challenge_id: string
+              _proof_url?: string
+              _winner: string
+            }
+            Returns: string
+          }
       submit_tournament_match: {
         Args: { _match_id: string; _winner: string }
         Returns: undefined
