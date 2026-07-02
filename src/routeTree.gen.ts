@@ -21,6 +21,7 @@ import { Route as AchievementsRouteImport } from './routes/achievements'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TournamentsTournamentIdRouteImport } from './routes/tournaments.$tournamentId'
+import { Route as PredictionsMatchIdRouteImport } from './routes/predictions.$matchId'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedFriendsRouteImport } from './routes/_authenticated/friends'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
@@ -101,6 +102,11 @@ const TournamentsTournamentIdRoute = TournamentsTournamentIdRouteImport.update({
   id: '/$tournamentId',
   path: '/$tournamentId',
   getParentRoute: () => TournamentsRoute,
+} as any)
+const PredictionsMatchIdRoute = PredictionsMatchIdRouteImport.update({
+  id: '/$matchId',
+  path: '/$matchId',
+  getParentRoute: () => PredictionsRoute,
 } as any)
 const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   id: '/profile',
@@ -229,12 +235,13 @@ export interface FileRoutesByFullPath {
   '/feed': typeof FeedRoute
   '/king-of-arena': typeof KingOfArenaRoute
   '/leaderboard': typeof LeaderboardRoute
-  '/predictions': typeof PredictionsRoute
+  '/predictions': typeof PredictionsRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
   '/tournaments': typeof TournamentsRouteWithChildren
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/friends': typeof AuthenticatedFriendsRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/predictions/$matchId': typeof PredictionsMatchIdRoute
   '/tournaments/$tournamentId': typeof TournamentsTournamentIdRoute
   '/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/admin/banks': typeof AuthenticatedAdminBanksRoute
@@ -263,11 +270,12 @@ export interface FileRoutesByTo {
   '/feed': typeof FeedRoute
   '/king-of-arena': typeof KingOfArenaRoute
   '/leaderboard': typeof LeaderboardRoute
-  '/predictions': typeof PredictionsRoute
+  '/predictions': typeof PredictionsRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
   '/tournaments': typeof TournamentsRouteWithChildren
   '/friends': typeof AuthenticatedFriendsRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/predictions/$matchId': typeof PredictionsMatchIdRoute
   '/tournaments/$tournamentId': typeof TournamentsTournamentIdRoute
   '/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/admin/banks': typeof AuthenticatedAdminBanksRoute
@@ -298,12 +306,13 @@ export interface FileRoutesById {
   '/feed': typeof FeedRoute
   '/king-of-arena': typeof KingOfArenaRoute
   '/leaderboard': typeof LeaderboardRoute
-  '/predictions': typeof PredictionsRoute
+  '/predictions': typeof PredictionsRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
   '/tournaments': typeof TournamentsRouteWithChildren
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/_authenticated/friends': typeof AuthenticatedFriendsRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/predictions/$matchId': typeof PredictionsMatchIdRoute
   '/tournaments/$tournamentId': typeof TournamentsTournamentIdRoute
   '/_authenticated/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/_authenticated/admin/banks': typeof AuthenticatedAdminBanksRoute
@@ -340,6 +349,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/friends'
     | '/profile'
+    | '/predictions/$matchId'
     | '/tournaments/$tournamentId'
     | '/admin/analytics'
     | '/admin/banks'
@@ -373,6 +383,7 @@ export interface FileRouteTypes {
     | '/tournaments'
     | '/friends'
     | '/profile'
+    | '/predictions/$matchId'
     | '/tournaments/$tournamentId'
     | '/admin/analytics'
     | '/admin/banks'
@@ -408,6 +419,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/friends'
     | '/_authenticated/profile'
+    | '/predictions/$matchId'
     | '/tournaments/$tournamentId'
     | '/_authenticated/admin/analytics'
     | '/_authenticated/admin/banks'
@@ -438,7 +450,7 @@ export interface RootRouteChildren {
   FeedRoute: typeof FeedRoute
   KingOfArenaRoute: typeof KingOfArenaRoute
   LeaderboardRoute: typeof LeaderboardRoute
-  PredictionsRoute: typeof PredictionsRoute
+  PredictionsRoute: typeof PredictionsRouteWithChildren
   ResetPasswordRoute: typeof ResetPasswordRoute
   TournamentsRoute: typeof TournamentsRouteWithChildren
 }
@@ -528,6 +540,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/tournaments/$tournamentId'
       preLoaderRoute: typeof TournamentsTournamentIdRouteImport
       parentRoute: typeof TournamentsRoute
+    }
+    '/predictions/$matchId': {
+      id: '/predictions/$matchId'
+      path: '/$matchId'
+      fullPath: '/predictions/$matchId'
+      preLoaderRoute: typeof PredictionsMatchIdRouteImport
+      parentRoute: typeof PredictionsRoute
     }
     '/_authenticated/profile': {
       id: '/_authenticated/profile'
@@ -743,6 +762,18 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface PredictionsRouteChildren {
+  PredictionsMatchIdRoute: typeof PredictionsMatchIdRoute
+}
+
+const PredictionsRouteChildren: PredictionsRouteChildren = {
+  PredictionsMatchIdRoute: PredictionsMatchIdRoute,
+}
+
+const PredictionsRouteWithChildren = PredictionsRoute._addFileChildren(
+  PredictionsRouteChildren,
+)
+
 interface TournamentsRouteChildren {
   TournamentsTournamentIdRoute: typeof TournamentsTournamentIdRoute
 }
@@ -764,7 +795,7 @@ const rootRouteChildren: RootRouteChildren = {
   FeedRoute: FeedRoute,
   KingOfArenaRoute: KingOfArenaRoute,
   LeaderboardRoute: LeaderboardRoute,
-  PredictionsRoute: PredictionsRoute,
+  PredictionsRoute: PredictionsRouteWithChildren,
   ResetPasswordRoute: ResetPasswordRoute,
   TournamentsRoute: TournamentsRouteWithChildren,
 }

@@ -380,6 +380,136 @@ export type Database = {
         }
         Relationships: []
       }
+      market_entries: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          is_winner: boolean | null
+          market_id: string
+          option_id: string
+          payout: number
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          is_winner?: boolean | null
+          market_id: string
+          option_id: string
+          payout?: number
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          is_winner?: boolean | null
+          market_id?: string
+          option_id?: string
+          payout?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "market_entries_market_id_fkey"
+            columns: ["market_id"]
+            isOneToOne: false
+            referencedRelation: "match_markets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "market_entries_option_id_fkey"
+            columns: ["option_id"]
+            isOneToOne: false
+            referencedRelation: "market_options"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      market_options: {
+        Row: {
+          created_at: string
+          id: string
+          label: string
+          market_id: string
+          sort_order: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          label: string
+          market_id: string
+          sort_order?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          label?: string
+          market_id?: string
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "market_options_market_id_fkey"
+            columns: ["market_id"]
+            isOneToOne: false
+            referencedRelation: "match_markets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      match_markets: {
+        Row: {
+          closes_at: string
+          commission_pct: number
+          created_at: string
+          entry_fee: number
+          id: string
+          market_type: string
+          match_id: string
+          status: Database["public"]["Enums"]["market_status"]
+          title: string
+          updated_at: string
+          winning_option_id: string | null
+        }
+        Insert: {
+          closes_at: string
+          commission_pct?: number
+          created_at?: string
+          entry_fee: number
+          id?: string
+          market_type?: string
+          match_id: string
+          status?: Database["public"]["Enums"]["market_status"]
+          title: string
+          updated_at?: string
+          winning_option_id?: string | null
+        }
+        Update: {
+          closes_at?: string
+          commission_pct?: number
+          created_at?: string
+          entry_fee?: number
+          id?: string
+          market_type?: string
+          match_id?: string
+          status?: Database["public"]["Enums"]["market_status"]
+          title?: string
+          updated_at?: string
+          winning_option_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "match_markets_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       match_results: {
         Row: {
           challenge_id: string
@@ -420,6 +550,54 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      matches: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          kind: Database["public"]["Enums"]["match_kind"]
+          sport: string
+          start_time: string
+          status: Database["public"]["Enums"]["match_status"]
+          team1_logo: string | null
+          team1_name: string
+          team2_logo: string | null
+          team2_name: string
+          tournament: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          kind: Database["public"]["Enums"]["match_kind"]
+          sport: string
+          start_time: string
+          status?: Database["public"]["Enums"]["match_status"]
+          team1_logo?: string | null
+          team1_name: string
+          team2_logo?: string | null
+          team2_name: string
+          tournament?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          kind?: Database["public"]["Enums"]["match_kind"]
+          sport?: string
+          start_time?: string
+          status?: Database["public"]["Enums"]["match_status"]
+          team1_logo?: string | null
+          team1_name?: string
+          team2_logo?: string | null
+          team2_name?: string
+          tournament?: string | null
+          updated_at?: string
+        }
+        Relationships: []
       }
       messages: {
         Row: {
@@ -1046,6 +1224,33 @@ export type Database = {
         Returns: undefined
       }
       admin_approve_withdrawal: { Args: { _wd_id: string }; Returns: undefined }
+      admin_create_market: {
+        Args: {
+          _closes_at: string
+          _commission_pct: number
+          _entry_fee: number
+          _market_type: string
+          _match_id: string
+          _options: string[]
+          _title: string
+        }
+        Returns: string
+      }
+      admin_create_match: {
+        Args: {
+          _kind: Database["public"]["Enums"]["match_kind"]
+          _sport: string
+          _start_time: string
+          _team1_logo: string
+          _team1_name: string
+          _team2_logo: string
+          _team2_name: string
+          _tournament: string
+        }
+        Returns: string
+      }
+      admin_delete_market: { Args: { _market_id: string }; Returns: undefined }
+      admin_delete_match: { Args: { _match_id: string }; Returns: undefined }
       admin_reject_deposit: {
         Args: { _deposit_id: string; _note: string }
         Returns: undefined
@@ -1056,6 +1261,42 @@ export type Database = {
       }
       admin_resolve_dispute: {
         Args: { _dispute_id: string; _resolution: string; _winner: string }
+        Returns: undefined
+      }
+      admin_set_market_status: {
+        Args: {
+          _market_id: string
+          _status: Database["public"]["Enums"]["market_status"]
+        }
+        Returns: undefined
+      }
+      admin_settle_market: {
+        Args: { _market_id: string; _winning_option_id: string }
+        Returns: undefined
+      }
+      admin_update_market: {
+        Args: {
+          _closes_at: string
+          _commission_pct: number
+          _entry_fee: number
+          _market_id: string
+          _market_type: string
+          _title: string
+        }
+        Returns: undefined
+      }
+      admin_update_match: {
+        Args: {
+          _match_id: string
+          _sport: string
+          _start_time: string
+          _status: Database["public"]["Enums"]["match_status"]
+          _team1_logo: string
+          _team1_name: string
+          _team2_logo: string
+          _team2_name: string
+          _tournament: string
+        }
         Returns: undefined
       }
       cancel_challenge: { Args: { _challenge_id: string }; Returns: undefined }
@@ -1100,6 +1341,10 @@ export type Database = {
       }
       join_challenge: { Args: { _challenge_id: string }; Returns: undefined }
       join_tournament: { Args: { _tournament_id: string }; Returns: undefined }
+      place_prediction: {
+        Args: { _market_id: string; _option_id: string }
+        Returns: string
+      }
       remove_friend: { Args: { _fid: string }; Returns: undefined }
       respond_friend_request: {
         Args: { _accept: boolean; _fid: string }
@@ -1136,7 +1381,10 @@ export type Database = {
         | "completed"
         | "cancelled"
       dispute_status: "open" | "under_review" | "resolved" | "closed"
+      market_status: "open" | "closed" | "settled" | "cancelled" | "refunded"
+      match_kind: "sport" | "esport"
       match_result_status: "pending" | "confirmed" | "disputed" | "resolved"
+      match_status: "scheduled" | "live" | "finished" | "cancelled"
       prediction_status: "open" | "closed" | "settled" | "cancelled"
       request_status: "pending" | "approved" | "rejected" | "cancelled"
       tournament_status:
@@ -1295,7 +1543,10 @@ export const Constants = {
         "cancelled",
       ],
       dispute_status: ["open", "under_review", "resolved", "closed"],
+      market_status: ["open", "closed", "settled", "cancelled", "refunded"],
+      match_kind: ["sport", "esport"],
       match_result_status: ["pending", "confirmed", "disputed", "resolved"],
+      match_status: ["scheduled", "live", "finished", "cancelled"],
       prediction_status: ["open", "closed", "settled", "cancelled"],
       request_status: ["pending", "approved", "rejected", "cancelled"],
       tournament_status: [

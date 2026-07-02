@@ -39,6 +39,15 @@ const MAP: Record<string, string> = {
   cannot_friend_self: "لا يمكنك إرسال طلب صداقة لنفسك",
   friendship_exists: "توجد علاقة صداقة بالفعل",
   not_found: "غير موجود",
+  market_not_found: "السوق غير موجود",
+  market_not_open: "السوق مغلق",
+  market_closed: "انتهى وقت المشاركة في هذا السوق",
+  invalid_option: "الخيار غير صالح",
+  already_participated: "شاركت في هذا السوق مسبقاً",
+  already_settled: "تمت تسوية السوق مسبقاً",
+  need_min_two_options: "يجب إدخال خيارين على الأقل",
+  market_has_entries: "لا يمكن الحذف — يوجد مشاركون",
+  match_has_entries: "لا يمكن الحذف — توجد مشاركات مرتبطة",
 };
 
 export function translateFinancialError(raw?: string | null): string {
