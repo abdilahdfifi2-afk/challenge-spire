@@ -24,6 +24,7 @@ import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedWalletWithdrawRouteImport } from './routes/_authenticated/wallet.withdraw'
 import { Route as AuthenticatedWalletDepositRouteImport } from './routes/_authenticated/wallet.deposit'
 import { Route as AuthenticatedChallengesCreateRouteImport } from './routes/_authenticated/challenges.create'
+import { Route as AuthenticatedChallengesChallengeIdRouteImport } from './routes/_authenticated/challenges.$challengeId'
 import { Route as AuthenticatedAdminWithdrawalsRouteImport } from './routes/_authenticated/admin/withdrawals'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin/users'
 import { Route as AuthenticatedAdminTournamentsRouteImport } from './routes/_authenticated/admin/tournaments'
@@ -112,6 +113,12 @@ const AuthenticatedChallengesCreateRoute =
     path: '/challenges/create',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedChallengesChallengeIdRoute =
+  AuthenticatedChallengesChallengeIdRouteImport.update({
+    id: '/challenges/$challengeId',
+    path: '/challenges/$challengeId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminWithdrawalsRoute =
   AuthenticatedAdminWithdrawalsRouteImport.update({
     id: '/withdrawals',
@@ -182,6 +189,7 @@ export interface FileRoutesByFullPath {
   '/admin/tournaments': typeof AuthenticatedAdminTournamentsRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/admin/withdrawals': typeof AuthenticatedAdminWithdrawalsRoute
+  '/challenges/$challengeId': typeof AuthenticatedChallengesChallengeIdRoute
   '/challenges/create': typeof AuthenticatedChallengesCreateRoute
   '/wallet/deposit': typeof AuthenticatedWalletDepositRoute
   '/wallet/withdraw': typeof AuthenticatedWalletWithdrawRoute
@@ -206,6 +214,7 @@ export interface FileRoutesByTo {
   '/admin/tournaments': typeof AuthenticatedAdminTournamentsRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/admin/withdrawals': typeof AuthenticatedAdminWithdrawalsRoute
+  '/challenges/$challengeId': typeof AuthenticatedChallengesChallengeIdRoute
   '/challenges/create': typeof AuthenticatedChallengesCreateRoute
   '/wallet/deposit': typeof AuthenticatedWalletDepositRoute
   '/wallet/withdraw': typeof AuthenticatedWalletWithdrawRoute
@@ -233,6 +242,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/tournaments': typeof AuthenticatedAdminTournamentsRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/admin/withdrawals': typeof AuthenticatedAdminWithdrawalsRoute
+  '/_authenticated/challenges/$challengeId': typeof AuthenticatedChallengesChallengeIdRoute
   '/_authenticated/challenges/create': typeof AuthenticatedChallengesCreateRoute
   '/_authenticated/wallet/deposit': typeof AuthenticatedWalletDepositRoute
   '/_authenticated/wallet/withdraw': typeof AuthenticatedWalletWithdrawRoute
@@ -260,6 +270,7 @@ export interface FileRouteTypes {
     | '/admin/tournaments'
     | '/admin/users'
     | '/admin/withdrawals'
+    | '/challenges/$challengeId'
     | '/challenges/create'
     | '/wallet/deposit'
     | '/wallet/withdraw'
@@ -284,6 +295,7 @@ export interface FileRouteTypes {
     | '/admin/tournaments'
     | '/admin/users'
     | '/admin/withdrawals'
+    | '/challenges/$challengeId'
     | '/challenges/create'
     | '/wallet/deposit'
     | '/wallet/withdraw'
@@ -310,6 +322,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/tournaments'
     | '/_authenticated/admin/users'
     | '/_authenticated/admin/withdrawals'
+    | '/_authenticated/challenges/$challengeId'
     | '/_authenticated/challenges/create'
     | '/_authenticated/wallet/deposit'
     | '/_authenticated/wallet/withdraw'
@@ -435,6 +448,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedChallengesCreateRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/challenges/$challengeId': {
+      id: '/_authenticated/challenges/$challengeId'
+      path: '/challenges/$challengeId'
+      fullPath: '/challenges/$challengeId'
+      preLoaderRoute: typeof AuthenticatedChallengesChallengeIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin/withdrawals': {
       id: '/_authenticated/admin/withdrawals'
       path: '/withdrawals'
@@ -536,6 +556,7 @@ const AuthenticatedAdminRouteRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedChallengesChallengeIdRoute: typeof AuthenticatedChallengesChallengeIdRoute
   AuthenticatedChallengesCreateRoute: typeof AuthenticatedChallengesCreateRoute
   AuthenticatedWalletDepositRoute: typeof AuthenticatedWalletDepositRoute
   AuthenticatedWalletWithdrawRoute: typeof AuthenticatedWalletWithdrawRoute
@@ -545,6 +566,8 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRouteWithChildren,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+  AuthenticatedChallengesChallengeIdRoute:
+    AuthenticatedChallengesChallengeIdRoute,
   AuthenticatedChallengesCreateRoute: AuthenticatedChallengesCreateRoute,
   AuthenticatedWalletDepositRoute: AuthenticatedWalletDepositRoute,
   AuthenticatedWalletWithdrawRoute: AuthenticatedWalletWithdrawRoute,
