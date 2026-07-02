@@ -108,11 +108,7 @@ function MatchPage() {
           const opts = options.filter((o) => o.market_id === mk.id);
           const myEntry = user ? entries.find((e: any) => e.market_id === mk.id && e.user_id === user.id) : null;
           const marketEntries = entries.filter((e: any) => e.market_id === mk.id);
-          const pool = marketEntries.reduce((s, e: any) => s + Number(e.amount), 0);
-          const netPrize = pool * (1 - Number(mk.commission_pct) / 100);
-          return (
-            <MarketCard key={mk.id} market={mk} options={opts} myEntry={myEntry as any} pool={pool} netPrize={netPrize} participants={marketEntries.length} />
-          );
+          return <MarketCard key={mk.id} market={mk} options={opts} myEntry={myEntry as any} marketEntries={marketEntries} />;
         })}
       </div>
     </div>
@@ -130,36 +126,55 @@ function TeamBig({ name, logo, reverse }: { name: string; logo: string | null; r
   );
 }
 
-function MarketCard({ market, options, myEntry, pool, netPrize, participants }: {
-  market: Market; options: Option[]; myEntry: any; pool: number; netPrize: number; participants: number;
+function MarketCard({ market, options, myEntry, marketEntries }: {
+  market: Market; options: Option[]; myEntry: any; marketEntries: any[];
 }) {
   const { user } = useAuth();
   const qc = useQueryClient();
-  const [busy, setBusy] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
   const [selected, setSelected] = useState<string | null>(null);
+  const [stake, setStake] = useState<number>(Number(market.min_stake) || 10);
   const closesInMs = new Date(market.closes_at).getTime() - Date.now();
   const isLocked = market.status !== "open" || closesInMs <= 0;
   const isSettled = market.status === "settled";
   const isRefunded = market.status === "refunded";
 
-  const place = async (optionId: string) => {
+  const pool = marketEntries.reduce((s, e: any) => s + Number(e.amount), 0);
+  const commission = pool * Number(market.commission_pct) / 100;
+  const netPool = pool - commission;
+
+  // Live odds per option (parimutuel-style estimate)
+  const oddsFor = (optId: string) => {
+    const optStake = marketEntries.filter((e: any) => e.option_id === optId).reduce((s, e: any) => s + Number(e.amount), 0);
+    if (optStake <= 0) return 2.0; // opening odds
+    // if my prospective stake was on this option: (netPool + stake*0.9) / (optStake + stake)
+    const projectedNet = (pool + stake) * (1 - Number(market.commission_pct) / 100);
+    return Math.max(1.01, projectedNet / (optStake + stake));
+  };
+
+  const place = async () => {
     if (!user) { toast.error("سجّل الدخول للمشاركة"); return; }
-    setBusy(optionId);
-    const { error } = await supabase.rpc("place_prediction", { _market_id: market.id, _option_id: optionId });
-    setBusy(null);
+    if (!selected) { toast.error("اختر توقعك أولاً"); return; }
+    if (stake < Number(market.min_stake) || stake > Number(market.max_stake)) {
+      toast.error(`المبلغ يجب أن يكون بين ${market.min_stake} و ${market.max_stake} د.م`); return;
+    }
+    setBusy(true);
+    const { error } = await supabase.rpc("place_prediction", { _market_id: market.id, _option_id: selected, _stake: stake });
+    setBusy(false);
     if (error) { toast.error(translateFinancialError(error.message)); return; }
-    toast.success("تم تسجيل توقعك ✓");
+    toast.success("تم تسجيل رهانك ✓");
     setSelected(null);
     qc.invalidateQueries({ queryKey: ["market-entries"] });
     qc.invalidateQueries({ queryKey: ["wallet"] });
   };
 
   const statusBadge = isSettled ? { text: "تمت التسوية", cls: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30", icon: CheckCircle2 }
-    : isRefunded ? { text: "استرداد", cls: "bg-amber-500/15 text-amber-400 border-amber-500/30", icon: RotateCcw }
+    : isRefunded ? { text: "تعادل / استرداد", cls: "bg-amber-500/15 text-amber-400 border-amber-500/30", icon: RotateCcw }
     : market.status === "closed" ? { text: "مغلق", cls: "bg-muted text-muted-foreground border-border", icon: Lock }
     : closesInMs <= 0 ? { text: "انتهى الوقت", cls: "bg-muted text-muted-foreground border-border", icon: Lock }
     : { text: "مفتوح", cls: "bg-primary/15 text-primary border-primary/30", icon: Radio };
   const StatusIcon = statusBadge.icon;
+  const potentialWin = selected ? Math.round(stake * oddsFor(selected) * 100) / 100 : 0;
 
   return (
     <div className="card-elevated p-4 space-y-3">
@@ -167,7 +182,7 @@ function MarketCard({ market, options, myEntry, pool, netPrize, participants }: 
         <div>
           <div className="font-semibold">{market.title}</div>
           <div className="text-xs text-muted-foreground mt-0.5">
-            رسوم: {formatCurrency(market.entry_fee)} · عمولة {market.commission_pct}%
+            رهان: {formatCurrency(market.min_stake)} - {formatCurrency(market.max_stake)} · عمولة {market.commission_pct}%
           </div>
         </div>
         <span className={`text-[10px] px-2 py-0.5 rounded-full border font-semibold flex items-center gap-1 ${statusBadge.cls}`}>
@@ -175,9 +190,10 @@ function MarketCard({ market, options, myEntry, pool, netPrize, participants }: 
         </span>
       </div>
 
-      <div className="flex items-center gap-4 text-xs text-muted-foreground">
-        <span className="flex items-center gap-1"><Users className="h-3.5 w-3.5" /> {participants} مشارك</span>
-        <span className="flex items-center gap-1"><Trophy className="h-3.5 w-3.5 text-primary" /> جائزة صافية ≈ {formatCurrency(netPrize)}</span>
+      <div className="flex items-center gap-4 text-xs text-muted-foreground flex-wrap">
+        <span className="flex items-center gap-1"><Users className="h-3.5 w-3.5" /> {marketEntries.length} مشارك</span>
+        <span className="flex items-center gap-1"><Trophy className="h-3.5 w-3.5 text-primary" /> مجموع الرهانات: {formatCurrency(pool)}</span>
+        <span className="text-emerald-400">صافي التوزيع ≈ {formatCurrency(netPool)}</span>
         {!isLocked && <Countdown to={market.closes_at} inline />}
       </div>
 
@@ -187,34 +203,79 @@ function MarketCard({ market, options, myEntry, pool, netPrize, participants }: 
           const isWinning = isSettled && market.winning_option_id === o.id;
           const isLosing = isSettled && myEntry?.option_id === o.id && market.winning_option_id !== o.id;
           const isSel = selected === o.id;
+          const odds = oddsFor(o.id);
+          const optStake = marketEntries.filter((e: any) => e.option_id === o.id).reduce((s, e: any) => s + Number(e.amount), 0);
           return (
-            <div key={o.id}
-              className={`rounded-lg border p-3 flex items-center justify-between gap-3 transition ${isWinning ? "border-emerald-500/60 bg-emerald-500/10" : isLosing ? "border-red-500/40 bg-red-500/5 opacity-70" : isMy ? "border-primary/60 bg-primary/5" : isSel ? "border-primary" : "border-border"}`}>
-              <div className="flex items-center gap-2 min-w-0">
+            <button
+              key={o.id}
+              type="button"
+              disabled={isLocked || !!myEntry}
+              onClick={() => setSelected(o.id)}
+              className={`w-full text-start rounded-lg border p-3 flex items-center justify-between gap-3 transition disabled:cursor-not-allowed ${isWinning ? "border-emerald-500/60 bg-emerald-500/10" : isLosing ? "border-red-500/40 bg-red-500/5 opacity-70" : isMy ? "border-primary/60 bg-primary/5" : isSel ? "border-primary bg-primary/10 ring-2 ring-primary/40" : "border-border hover:border-primary/40"}`}
+            >
+              <div className="flex items-center gap-2 min-w-0 flex-1">
                 {isWinning && <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />}
                 {isLosing && <XCircle className="h-4 w-4 text-red-400 shrink-0" />}
                 <span className="font-medium truncate">{o.label}</span>
                 {isMy && !isSettled && <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary/20 text-primary">اختيارك</span>}
+                <span className="text-[10px] text-muted-foreground ms-auto">{formatCurrency(optStake)}</span>
               </div>
-              {!myEntry && !isLocked && (
-                <Button size="sm" variant={isSel ? "default" : "outline"}
-                  disabled={busy !== null}
-                  onClick={() => isSel ? place(o.id) : setSelected(o.id)}>
-                  {busy === o.id ? "…" : isSel ? "تأكيد المشاركة" : "اختر"}
-                </Button>
-              )}
+              <div className="text-end shrink-0">
+                <div className={`font-mono font-bold text-lg ${isSel ? "text-primary" : "text-foreground"}`}>{odds.toFixed(2)}</div>
+                <div className="text-[10px] text-muted-foreground">مضاعف</div>
+              </div>
               {isSettled && isMy && (
                 <span className={`text-sm font-bold ${isWinning ? "text-emerald-400" : "text-red-400"}`}>
                   {isWinning ? `+${formatCurrency(myEntry.payout)}` : `-${formatCurrency(myEntry.amount)}`}
                 </span>
               )}
-            </div>
+            </button>
           );
         })}
       </div>
+
+      {!myEntry && !isLocked && selected && (
+        <div className="rounded-lg border border-primary/30 bg-primary/5 p-3 space-y-3">
+          <div className="flex items-center gap-2 flex-wrap">
+            <label className="text-xs font-semibold text-muted-foreground">مبلغ الرهان (د.م):</label>
+            <input
+              type="number"
+              min={market.min_stake}
+              max={market.max_stake}
+              step="1"
+              value={stake}
+              onChange={(e) => setStake(Math.max(0, parseFloat(e.target.value) || 0))}
+              className="w-28 rounded-md border border-border bg-background px-2 py-1 text-sm font-mono"
+            />
+            <div className="flex gap-1">
+              {[market.min_stake, market.min_stake * 2, market.min_stake * 5, market.max_stake].map((v, i) => (
+                <button key={i} type="button" onClick={() => setStake(Number(v))} className="text-[10px] px-2 py-1 rounded bg-muted hover:bg-muted/80 border border-border">
+                  {Number(v)}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="flex items-center justify-between gap-2 text-sm">
+            <div>
+              <div className="text-xs text-muted-foreground">الربح المحتمل</div>
+              <div className="font-bold text-emerald-400 text-lg">{formatCurrency(potentialWin)}</div>
+            </div>
+            <Button onClick={place} disabled={busy} size="lg" className="gradient-primary text-primary-foreground border-0">
+              {busy ? "…" : "تأكيد الرهان"}
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {myEntry && !isSettled && !isRefunded && (
+        <div className="text-xs text-muted-foreground flex items-center gap-2">
+          <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" /> رهانك: {formatCurrency(myEntry.amount)} — بانتظار النتيجة.
+        </div>
+      )}
     </div>
   );
 }
+
 
 function Countdown({ to, inline }: { to: string; inline?: boolean }) {
   const [now, setNow] = useState(Date.now());
