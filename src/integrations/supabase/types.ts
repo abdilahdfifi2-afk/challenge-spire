@@ -14,6 +14,66 @@ export type Database = {
   }
   public: {
     Tables: {
+      achievements: {
+        Row: {
+          code: string
+          created_at: string
+          description: string | null
+          icon: string | null
+          id: string
+          title: string
+          xp_reward: number
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          title: string
+          xp_reward?: number
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          title?: string
+          xp_reward?: number
+        }
+        Relationships: []
+      }
+      activity_feed: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          meta: Json
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          meta?: Json
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          meta?: Json
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       audit_logs: {
         Row: {
           action: string
@@ -259,6 +319,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      friendships: {
+        Row: {
+          addressee_id: string
+          created_at: string
+          id: string
+          requester_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          addressee_id: string
+          created_at?: string
+          id?: string
+          requester_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          addressee_id?: string
+          created_at?: string
+          id?: string
+          requester_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       games: {
         Row: {
@@ -738,6 +825,35 @@ export type Database = {
           },
         ]
       }
+      user_achievements: {
+        Row: {
+          achievement_id: string
+          granted_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          achievement_id: string
+          granted_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          achievement_id?: string
+          granted_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_achievements_achievement_id_fkey"
+            columns: ["achievement_id"]
+            isOneToOne: false
+            referencedRelation: "achievements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -891,6 +1007,11 @@ export type Database = {
         }
         Returns: undefined
       }
+      _check_win_achievements: { Args: { _user: string }; Returns: undefined }
+      _grant_achievement: {
+        Args: { _code: string; _user: string }
+        Returns: undefined
+      }
       _notify: {
         Args: {
           _body: string
@@ -979,6 +1100,12 @@ export type Database = {
       }
       join_challenge: { Args: { _challenge_id: string }; Returns: undefined }
       join_tournament: { Args: { _tournament_id: string }; Returns: undefined }
+      remove_friend: { Args: { _fid: string }; Returns: undefined }
+      respond_friend_request: {
+        Args: { _accept: boolean; _fid: string }
+        Returns: undefined
+      }
+      send_friend_request: { Args: { _username: string }; Returns: string }
       set_challenge_ready: {
         Args: { _challenge_id: string; _ready: boolean }
         Returns: string

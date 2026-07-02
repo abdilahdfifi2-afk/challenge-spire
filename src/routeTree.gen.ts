@@ -14,12 +14,15 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PredictionsRouteImport } from './routes/predictions'
 import { Route as LeaderboardRouteImport } from './routes/leaderboard'
 import { Route as KingOfArenaRouteImport } from './routes/king-of-arena'
+import { Route as FeedRouteImport } from './routes/feed'
 import { Route as ChallengesRouteImport } from './routes/challenges'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AchievementsRouteImport } from './routes/achievements'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TournamentsTournamentIdRouteImport } from './routes/tournaments.$tournamentId'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as AuthenticatedFriendsRouteImport } from './routes/_authenticated/friends'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
 import { Route as AuthenticatedWalletIndexRouteImport } from './routes/_authenticated/wallet.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
@@ -38,6 +41,7 @@ import { Route as AuthenticatedAdminGamesRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminDisputesRouteImport } from './routes/_authenticated/admin/disputes'
 import { Route as AuthenticatedAdminDepositsRouteImport } from './routes/_authenticated/admin/deposits'
 import { Route as AuthenticatedAdminBanksRouteImport } from './routes/_authenticated/admin/banks'
+import { Route as AuthenticatedAdminAnalyticsRouteImport } from './routes/_authenticated/admin/analytics'
 
 const TournamentsRoute = TournamentsRouteImport.update({
   id: '/tournaments',
@@ -64,6 +68,11 @@ const KingOfArenaRoute = KingOfArenaRouteImport.update({
   path: '/king-of-arena',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FeedRoute = FeedRouteImport.update({
+  id: '/feed',
+  path: '/feed',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ChallengesRoute = ChallengesRouteImport.update({
   id: '/challenges',
   path: '/challenges',
@@ -72,6 +81,11 @@ const ChallengesRoute = ChallengesRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AchievementsRoute = AchievementsRouteImport.update({
+  id: '/achievements',
+  path: '/achievements',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -91,6 +105,11 @@ const TournamentsTournamentIdRoute = TournamentsTournamentIdRouteImport.update({
 const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedFriendsRoute = AuthenticatedFriendsRouteImport.update({
+  id: '/friends',
+  path: '/friends',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
@@ -195,19 +214,29 @@ const AuthenticatedAdminBanksRoute = AuthenticatedAdminBanksRouteImport.update({
   path: '/banks',
   getParentRoute: () => AuthenticatedAdminRouteRoute,
 } as any)
+const AuthenticatedAdminAnalyticsRoute =
+  AuthenticatedAdminAnalyticsRouteImport.update({
+    id: '/analytics',
+    path: '/analytics',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/achievements': typeof AchievementsRoute
   '/auth': typeof AuthRoute
   '/challenges': typeof ChallengesRoute
+  '/feed': typeof FeedRoute
   '/king-of-arena': typeof KingOfArenaRoute
   '/leaderboard': typeof LeaderboardRoute
   '/predictions': typeof PredictionsRoute
   '/reset-password': typeof ResetPasswordRoute
   '/tournaments': typeof TournamentsRouteWithChildren
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
+  '/friends': typeof AuthenticatedFriendsRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/tournaments/$tournamentId': typeof TournamentsTournamentIdRoute
+  '/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/admin/banks': typeof AuthenticatedAdminBanksRoute
   '/admin/deposits': typeof AuthenticatedAdminDepositsRoute
   '/admin/disputes': typeof AuthenticatedAdminDisputesRoute
@@ -228,15 +257,19 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/achievements': typeof AchievementsRoute
   '/auth': typeof AuthRoute
   '/challenges': typeof ChallengesRoute
+  '/feed': typeof FeedRoute
   '/king-of-arena': typeof KingOfArenaRoute
   '/leaderboard': typeof LeaderboardRoute
   '/predictions': typeof PredictionsRoute
   '/reset-password': typeof ResetPasswordRoute
   '/tournaments': typeof TournamentsRouteWithChildren
+  '/friends': typeof AuthenticatedFriendsRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/tournaments/$tournamentId': typeof TournamentsTournamentIdRoute
+  '/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/admin/banks': typeof AuthenticatedAdminBanksRoute
   '/admin/deposits': typeof AuthenticatedAdminDepositsRoute
   '/admin/disputes': typeof AuthenticatedAdminDisputesRoute
@@ -259,16 +292,20 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/achievements': typeof AchievementsRoute
   '/auth': typeof AuthRoute
   '/challenges': typeof ChallengesRoute
+  '/feed': typeof FeedRoute
   '/king-of-arena': typeof KingOfArenaRoute
   '/leaderboard': typeof LeaderboardRoute
   '/predictions': typeof PredictionsRoute
   '/reset-password': typeof ResetPasswordRoute
   '/tournaments': typeof TournamentsRouteWithChildren
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
+  '/_authenticated/friends': typeof AuthenticatedFriendsRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/tournaments/$tournamentId': typeof TournamentsTournamentIdRoute
+  '/_authenticated/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/_authenticated/admin/banks': typeof AuthenticatedAdminBanksRoute
   '/_authenticated/admin/deposits': typeof AuthenticatedAdminDepositsRoute
   '/_authenticated/admin/disputes': typeof AuthenticatedAdminDisputesRoute
@@ -291,16 +328,20 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/achievements'
     | '/auth'
     | '/challenges'
+    | '/feed'
     | '/king-of-arena'
     | '/leaderboard'
     | '/predictions'
     | '/reset-password'
     | '/tournaments'
     | '/admin'
+    | '/friends'
     | '/profile'
     | '/tournaments/$tournamentId'
+    | '/admin/analytics'
     | '/admin/banks'
     | '/admin/deposits'
     | '/admin/disputes'
@@ -321,15 +362,19 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/achievements'
     | '/auth'
     | '/challenges'
+    | '/feed'
     | '/king-of-arena'
     | '/leaderboard'
     | '/predictions'
     | '/reset-password'
     | '/tournaments'
+    | '/friends'
     | '/profile'
     | '/tournaments/$tournamentId'
+    | '/admin/analytics'
     | '/admin/banks'
     | '/admin/deposits'
     | '/admin/disputes'
@@ -351,16 +396,20 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/achievements'
     | '/auth'
     | '/challenges'
+    | '/feed'
     | '/king-of-arena'
     | '/leaderboard'
     | '/predictions'
     | '/reset-password'
     | '/tournaments'
     | '/_authenticated/admin'
+    | '/_authenticated/friends'
     | '/_authenticated/profile'
     | '/tournaments/$tournamentId'
+    | '/_authenticated/admin/analytics'
     | '/_authenticated/admin/banks'
     | '/_authenticated/admin/deposits'
     | '/_authenticated/admin/disputes'
@@ -383,8 +432,10 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AchievementsRoute: typeof AchievementsRoute
   AuthRoute: typeof AuthRoute
   ChallengesRoute: typeof ChallengesRoute
+  FeedRoute: typeof FeedRoute
   KingOfArenaRoute: typeof KingOfArenaRoute
   LeaderboardRoute: typeof LeaderboardRoute
   PredictionsRoute: typeof PredictionsRoute
@@ -429,6 +480,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KingOfArenaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/feed': {
+      id: '/feed'
+      path: '/feed'
+      fullPath: '/feed'
+      preLoaderRoute: typeof FeedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/challenges': {
       id: '/challenges'
       path: '/challenges'
@@ -441,6 +499,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/achievements': {
+      id: '/achievements'
+      path: '/achievements'
+      fullPath: '/achievements'
+      preLoaderRoute: typeof AchievementsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -469,6 +534,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/friends': {
+      id: '/_authenticated/friends'
+      path: '/friends'
+      fullPath: '/friends'
+      preLoaderRoute: typeof AuthenticatedFriendsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/admin': {
@@ -597,10 +669,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminBanksRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/analytics': {
+      id: '/_authenticated/admin/analytics'
+      path: '/analytics'
+      fullPath: '/admin/analytics'
+      preLoaderRoute: typeof AuthenticatedAdminAnalyticsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
   }
 }
 
 interface AuthenticatedAdminRouteRouteChildren {
+  AuthenticatedAdminAnalyticsRoute: typeof AuthenticatedAdminAnalyticsRoute
   AuthenticatedAdminBanksRoute: typeof AuthenticatedAdminBanksRoute
   AuthenticatedAdminDepositsRoute: typeof AuthenticatedAdminDepositsRoute
   AuthenticatedAdminDisputesRoute: typeof AuthenticatedAdminDisputesRoute
@@ -617,6 +697,7 @@ interface AuthenticatedAdminRouteRouteChildren {
 
 const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
   {
+    AuthenticatedAdminAnalyticsRoute: AuthenticatedAdminAnalyticsRoute,
     AuthenticatedAdminBanksRoute: AuthenticatedAdminBanksRoute,
     AuthenticatedAdminDepositsRoute: AuthenticatedAdminDepositsRoute,
     AuthenticatedAdminDisputesRoute: AuthenticatedAdminDisputesRoute,
@@ -638,6 +719,7 @@ const AuthenticatedAdminRouteRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
+  AuthenticatedFriendsRoute: typeof AuthenticatedFriendsRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedChallengesChallengeIdRoute: typeof AuthenticatedChallengesChallengeIdRoute
   AuthenticatedChallengesCreateRoute: typeof AuthenticatedChallengesCreateRoute
@@ -648,6 +730,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRouteWithChildren,
+  AuthenticatedFriendsRoute: AuthenticatedFriendsRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedChallengesChallengeIdRoute:
     AuthenticatedChallengesChallengeIdRoute,
@@ -675,8 +758,10 @@ const TournamentsRouteWithChildren = TournamentsRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AchievementsRoute: AchievementsRoute,
   AuthRoute: AuthRoute,
   ChallengesRoute: ChallengesRoute,
+  FeedRoute: FeedRoute,
   KingOfArenaRoute: KingOfArenaRoute,
   LeaderboardRoute: LeaderboardRoute,
   PredictionsRoute: PredictionsRoute,

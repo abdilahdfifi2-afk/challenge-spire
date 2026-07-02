@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, redirect, useRouterState } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
-import { Shield, Users, Landmark, ArrowDownCircle, ArrowUpCircle, Gamepad2, Trophy, Target, AlertTriangle, ScrollText, MessagesSquare, Settings } from "lucide-react";
+import { Shield, Users, Landmark, ArrowDownCircle, ArrowUpCircle, Gamepad2, Trophy, Target, AlertTriangle, ScrollText, MessagesSquare, Settings, BarChart3 } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   ssr: false,
@@ -16,6 +16,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
 
 const items = [
   { to: "/admin", label: "لوحة القيادة", icon: Shield, exact: true },
+  { to: "/admin/analytics", label: "التحليلات", icon: BarChart3 },
   { to: "/admin/users", label: "المستخدمون", icon: Users },
   { to: "/admin/banks", label: "البنوك", icon: Landmark },
   { to: "/admin/deposits", label: "الإيداعات", icon: ArrowDownCircle },

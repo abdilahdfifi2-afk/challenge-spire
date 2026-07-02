@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Trophy, Wallet, Home, Swords, Target, User, Shield, Menu, X, LogOut, Crown } from "lucide-react";
+import { Trophy, Wallet, Home, Swords, Target, User, Shield, Menu, X, LogOut, Crown, Activity, Award, Users as UsersIcon } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,8 @@ const nav = [
   { to: "/tournaments", label: "البطولات", icon: Trophy },
   { to: "/predictions", label: "التوقعات", icon: Target },
   { to: "/king-of-arena", label: "ملك الحلبة", icon: Crown },
+  { to: "/feed", label: "التغذية", icon: Activity },
+  { to: "/achievements", label: "الإنجازات", icon: Award },
   { to: "/leaderboard", label: "التصنيف", icon: Trophy },
 ] as const;
 
@@ -58,6 +60,11 @@ export function SiteHeader() {
               <Link to="/wallet" className="hidden sm:inline-flex">
                 <Button variant="secondary" size="sm" className="gap-2">
                   <Wallet className="h-4 w-4" /> المحفظة
+                </Button>
+              </Link>
+              <Link to="/friends" className="hidden md:inline-flex">
+                <Button variant="ghost" size="sm" className="gap-2">
+                  <UsersIcon className="h-4 w-4" /> الأصدقاء
                 </Button>
               </Link>
               <Link to="/profile" className="hidden sm:inline-flex">
