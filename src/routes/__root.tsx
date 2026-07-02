@@ -82,15 +82,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:description", content: "تحديات، بطولات، وتوقعات مع جوائز حقيقية على أشهر الألعاب." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "theme-color", content: "#7c3aed" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
       { rel: "manifest", href: "/manifest.webmanifest" },
       { rel: "apple-touch-icon", href: "/favicon.ico" },
-    ],
-    meta2: [
-      { name: "theme-color", content: "#7c3aed" },
     ],
   }),
   shellComponent: RootShell,
