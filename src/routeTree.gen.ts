@@ -13,6 +13,7 @@ import { Route as TournamentsRouteImport } from './routes/tournaments'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PredictionsRouteImport } from './routes/predictions'
 import { Route as LeaderboardRouteImport } from './routes/leaderboard'
+import { Route as KingOfArenaRouteImport } from './routes/king-of-arena'
 import { Route as ChallengesRouteImport } from './routes/challenges'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
@@ -55,6 +56,11 @@ const PredictionsRoute = PredictionsRouteImport.update({
 const LeaderboardRoute = LeaderboardRouteImport.update({
   id: '/leaderboard',
   path: '/leaderboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KingOfArenaRoute = KingOfArenaRouteImport.update({
+  id: '/king-of-arena',
+  path: '/king-of-arena',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ChallengesRoute = ChallengesRouteImport.update({
@@ -188,6 +194,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/challenges': typeof ChallengesRoute
+  '/king-of-arena': typeof KingOfArenaRoute
   '/leaderboard': typeof LeaderboardRoute
   '/predictions': typeof PredictionsRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -216,6 +223,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/challenges': typeof ChallengesRoute
+  '/king-of-arena': typeof KingOfArenaRoute
   '/leaderboard': typeof LeaderboardRoute
   '/predictions': typeof PredictionsRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -245,6 +253,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/challenges': typeof ChallengesRoute
+  '/king-of-arena': typeof KingOfArenaRoute
   '/leaderboard': typeof LeaderboardRoute
   '/predictions': typeof PredictionsRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -275,6 +284,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/challenges'
+    | '/king-of-arena'
     | '/leaderboard'
     | '/predictions'
     | '/reset-password'
@@ -303,6 +313,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/challenges'
+    | '/king-of-arena'
     | '/leaderboard'
     | '/predictions'
     | '/reset-password'
@@ -331,6 +342,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/challenges'
+    | '/king-of-arena'
     | '/leaderboard'
     | '/predictions'
     | '/reset-password'
@@ -361,6 +373,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   ChallengesRoute: typeof ChallengesRoute
+  KingOfArenaRoute: typeof KingOfArenaRoute
   LeaderboardRoute: typeof LeaderboardRoute
   PredictionsRoute: typeof PredictionsRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
@@ -395,6 +408,13 @@ declare module '@tanstack/react-router' {
       path: '/leaderboard'
       fullPath: '/leaderboard'
       preLoaderRoute: typeof LeaderboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/king-of-arena': {
+      id: '/king-of-arena'
+      path: '/king-of-arena'
+      fullPath: '/king-of-arena'
+      preLoaderRoute: typeof KingOfArenaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/challenges': {
@@ -626,6 +646,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   ChallengesRoute: ChallengesRoute,
+  KingOfArenaRoute: KingOfArenaRoute,
   LeaderboardRoute: LeaderboardRoute,
   PredictionsRoute: PredictionsRoute,
   ResetPasswordRoute: ResetPasswordRoute,
