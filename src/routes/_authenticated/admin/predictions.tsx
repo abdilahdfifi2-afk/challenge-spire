@@ -266,7 +266,8 @@ function MarketsPanel({ matchId }: { matchId: string }) {
             <div className="flex items-center gap-2 flex-wrap">
               <span className="font-semibold text-sm">{mk.title}</span>
               <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted">{mk.status}</span>
-              <span className="text-xs text-muted-foreground">رسوم {formatCurrency(mk.entry_fee)}</span>
+              <span className="text-xs text-muted-foreground">رهان {formatCurrency(mk.min_stake ?? 0)} - {formatCurrency(mk.max_stake ?? 0)}</span>
+              <span className="text-xs text-muted-foreground">عمولة {mk.commission_pct}%</span>
               <span className="text-xs text-muted-foreground">مشاركون: {entries.length}</span>
               <span className="text-xs text-primary font-semibold">مجموع: {formatCurrency(pool)}</span>
               <span className="text-xs text-muted-foreground ms-auto">يغلق: {formatDate(mk.closes_at)}</span>
