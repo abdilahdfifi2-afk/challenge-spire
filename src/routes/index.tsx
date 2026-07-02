@@ -124,16 +124,21 @@ function HomePage() {
               </Button>
             </Link>
           </div>
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-muted-foreground">
+            <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-success animate-pulse" /> بث مباشر للتحديات</span>
+            <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-primary" /> دفع فوري بالدرهم</span>
+            <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-accent" /> نزاعات محكّمة 24/7</span>
+          </div>
         </div>
       </section>
 
-      <div className="mx-auto max-w-7xl px-4 space-y-16 pb-16">
+      <div className="mx-auto max-w-7xl px-4 space-y-16 pb-16 -mt-8">
         {/* STATS */}
         <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <StatCard icon={Users} label="لاعبون" value={stats.data?.players ?? 0} />
-          <StatCard icon={Trophy} label="بطولات" value={stats.data?.tournaments ?? 0} />
+          <StatCard icon={Users} label="لاعبون نشطون" value={stats.data?.players ?? 0} />
+          <StatCard icon={Trophy} label="بطولات مُقامة" value={stats.data?.tournaments ?? 0} />
           <StatCard icon={Swords} label="مباريات مكتملة" value={stats.data?.matches ?? 0} />
-          <StatCard icon={TrendingUp} label="الألعاب المدعومة" value={games.data?.length ?? 0} />
+          <StatCard icon={TrendingUp} label="جوائز موزّعة (د.م)" value={stats.data?.prizes ?? 0} />
         </section>
 
         {/* GAMES */}
