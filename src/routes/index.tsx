@@ -4,6 +4,7 @@ import { Trophy, Swords, Target, Users, TrendingUp, Zap, Award, Flame } from "lu
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { formatCurrency, formatDate } from "@/lib/format";
+import { gameCover, pickBanner, TOURNAMENT_BANNERS, PREDICTION_BANNERS } from "@/lib/media";
 import { useEffect } from "react";
 
 export const Route = createFileRoute("/")({
