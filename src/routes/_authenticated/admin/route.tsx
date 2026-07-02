@@ -16,6 +16,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
 
 const items = [
   { to: "/admin", label: "لوحة القيادة", icon: Shield, exact: true },
+  { to: "/admin/analytics", label: "التحليلات", icon: BarChart3 },
   { to: "/admin/users", label: "المستخدمون", icon: Users },
   { to: "/admin/banks", label: "البنوك", icon: Landmark },
   { to: "/admin/deposits", label: "الإيداعات", icon: ArrowDownCircle },
