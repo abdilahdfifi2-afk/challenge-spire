@@ -9,7 +9,11 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TournamentsRouteImport } from './routes/tournaments'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as PredictionsRouteImport } from './routes/predictions'
+import { Route as LeaderboardRouteImport } from './routes/leaderboard'
+import { Route as ChallengesRouteImport } from './routes/challenges'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -17,10 +21,31 @@ import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedWalletIndexRouteImport } from './routes/_authenticated/wallet.index'
 import { Route as AuthenticatedWalletWithdrawRouteImport } from './routes/_authenticated/wallet.withdraw'
 import { Route as AuthenticatedWalletDepositRouteImport } from './routes/_authenticated/wallet.deposit'
+import { Route as AuthenticatedChallengesCreateRouteImport } from './routes/_authenticated/challenges.create'
 
+const TournamentsRoute = TournamentsRouteImport.update({
+  id: '/tournaments',
+  path: '/tournaments',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PredictionsRoute = PredictionsRouteImport.update({
+  id: '/predictions',
+  path: '/predictions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LeaderboardRoute = LeaderboardRouteImport.update({
+  id: '/leaderboard',
+  path: '/leaderboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChallengesRoute = ChallengesRouteImport.update({
+  id: '/challenges',
+  path: '/challenges',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -60,12 +85,23 @@ const AuthenticatedWalletDepositRoute =
     path: '/wallet/deposit',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedChallengesCreateRoute =
+  AuthenticatedChallengesCreateRouteImport.update({
+    id: '/challenges/create',
+    path: '/challenges/create',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/challenges': typeof ChallengesRoute
+  '/leaderboard': typeof LeaderboardRoute
+  '/predictions': typeof PredictionsRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/tournaments': typeof TournamentsRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/challenges/create': typeof AuthenticatedChallengesCreateRoute
   '/wallet/deposit': typeof AuthenticatedWalletDepositRoute
   '/wallet/withdraw': typeof AuthenticatedWalletWithdrawRoute
   '/wallet/': typeof AuthenticatedWalletIndexRoute
@@ -73,8 +109,13 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/challenges': typeof ChallengesRoute
+  '/leaderboard': typeof LeaderboardRoute
+  '/predictions': typeof PredictionsRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/tournaments': typeof TournamentsRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/challenges/create': typeof AuthenticatedChallengesCreateRoute
   '/wallet/deposit': typeof AuthenticatedWalletDepositRoute
   '/wallet/withdraw': typeof AuthenticatedWalletWithdrawRoute
   '/wallet': typeof AuthenticatedWalletIndexRoute
@@ -84,8 +125,13 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/challenges': typeof ChallengesRoute
+  '/leaderboard': typeof LeaderboardRoute
+  '/predictions': typeof PredictionsRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/tournaments': typeof TournamentsRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/_authenticated/challenges/create': typeof AuthenticatedChallengesCreateRoute
   '/_authenticated/wallet/deposit': typeof AuthenticatedWalletDepositRoute
   '/_authenticated/wallet/withdraw': typeof AuthenticatedWalletWithdrawRoute
   '/_authenticated/wallet/': typeof AuthenticatedWalletIndexRoute
@@ -95,8 +141,13 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/challenges'
+    | '/leaderboard'
+    | '/predictions'
     | '/reset-password'
+    | '/tournaments'
     | '/profile'
+    | '/challenges/create'
     | '/wallet/deposit'
     | '/wallet/withdraw'
     | '/wallet/'
@@ -104,8 +155,13 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/challenges'
+    | '/leaderboard'
+    | '/predictions'
     | '/reset-password'
+    | '/tournaments'
     | '/profile'
+    | '/challenges/create'
     | '/wallet/deposit'
     | '/wallet/withdraw'
     | '/wallet'
@@ -114,8 +170,13 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/challenges'
+    | '/leaderboard'
+    | '/predictions'
     | '/reset-password'
+    | '/tournaments'
     | '/_authenticated/profile'
+    | '/_authenticated/challenges/create'
     | '/_authenticated/wallet/deposit'
     | '/_authenticated/wallet/withdraw'
     | '/_authenticated/wallet/'
@@ -125,16 +186,48 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  ChallengesRoute: typeof ChallengesRoute
+  LeaderboardRoute: typeof LeaderboardRoute
+  PredictionsRoute: typeof PredictionsRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  TournamentsRoute: typeof TournamentsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tournaments': {
+      id: '/tournaments'
+      path: '/tournaments'
+      fullPath: '/tournaments'
+      preLoaderRoute: typeof TournamentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reset-password': {
       id: '/reset-password'
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/predictions': {
+      id: '/predictions'
+      path: '/predictions'
+      fullPath: '/predictions'
+      preLoaderRoute: typeof PredictionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/leaderboard': {
+      id: '/leaderboard'
+      path: '/leaderboard'
+      fullPath: '/leaderboard'
+      preLoaderRoute: typeof LeaderboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/challenges': {
+      id: '/challenges'
+      path: '/challenges'
+      fullPath: '/challenges'
+      preLoaderRoute: typeof ChallengesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -186,11 +279,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWalletDepositRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/challenges/create': {
+      id: '/_authenticated/challenges/create'
+      path: '/challenges/create'
+      fullPath: '/challenges/create'
+      preLoaderRoute: typeof AuthenticatedChallengesCreateRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedChallengesCreateRoute: typeof AuthenticatedChallengesCreateRoute
   AuthenticatedWalletDepositRoute: typeof AuthenticatedWalletDepositRoute
   AuthenticatedWalletWithdrawRoute: typeof AuthenticatedWalletWithdrawRoute
   AuthenticatedWalletIndexRoute: typeof AuthenticatedWalletIndexRoute
@@ -198,6 +299,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+  AuthenticatedChallengesCreateRoute: AuthenticatedChallengesCreateRoute,
   AuthenticatedWalletDepositRoute: AuthenticatedWalletDepositRoute,
   AuthenticatedWalletWithdrawRoute: AuthenticatedWalletWithdrawRoute,
   AuthenticatedWalletIndexRoute: AuthenticatedWalletIndexRoute,
@@ -210,7 +312,11 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  ChallengesRoute: ChallengesRoute,
+  LeaderboardRoute: LeaderboardRoute,
+  PredictionsRoute: PredictionsRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  TournamentsRoute: TournamentsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
