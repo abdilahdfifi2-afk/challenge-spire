@@ -96,13 +96,17 @@ export type Database = {
         Row: {
           created_at: string
           creator_id: string
+          creator_ready: boolean
           currency: string
           entry_fee: number
           game_id: string
           id: string
+          match_started_at: string | null
           opponent_id: string | null
+          opponent_ready: boolean
           prize: number
           rules: string | null
+          scheduled_at: string | null
           status: Database["public"]["Enums"]["challenge_status"]
           title: string | null
           updated_at: string
@@ -110,13 +114,17 @@ export type Database = {
         Insert: {
           created_at?: string
           creator_id: string
+          creator_ready?: boolean
           currency?: string
           entry_fee?: number
           game_id: string
           id?: string
+          match_started_at?: string | null
           opponent_id?: string | null
+          opponent_ready?: boolean
           prize?: number
           rules?: string | null
+          scheduled_at?: string | null
           status?: Database["public"]["Enums"]["challenge_status"]
           title?: string | null
           updated_at?: string
@@ -124,13 +132,17 @@ export type Database = {
         Update: {
           created_at?: string
           creator_id?: string
+          creator_ready?: boolean
           currency?: string
           entry_fee?: number
           game_id?: string
           id?: string
+          match_started_at?: string | null
           opponent_id?: string | null
+          opponent_ready?: boolean
           prize?: number
           rules?: string | null
+          scheduled_at?: string | null
           status?: Database["public"]["Enums"]["challenge_status"]
           title?: string | null
           updated_at?: string
@@ -898,6 +910,10 @@ export type Database = {
         Returns: boolean
       }
       join_challenge: { Args: { _challenge_id: string }; Returns: undefined }
+      set_challenge_ready: {
+        Args: { _challenge_id: string; _ready: boolean }
+        Returns: string
+      }
       submit_challenge_result: {
         Args: { _challenge_id: string; _winner: string }
         Returns: string
