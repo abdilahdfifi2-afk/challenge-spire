@@ -36,7 +36,7 @@ function HomePage() {
     queryFn: async () => {
       const { data } = await supabase
         .from("challenges")
-        .select("id,title,entry_fee,prize,currency,status,created_at,game_id,games(name)")
+        .select("id,title,entry_fee,prize,currency,status,created_at,game_id,games(name,slug)")
         .eq("status", "open")
         .order("created_at", { ascending: false })
         .limit(6);
