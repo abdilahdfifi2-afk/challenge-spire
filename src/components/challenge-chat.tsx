@@ -58,11 +58,18 @@ export function ChallengeChat({ challenge, hasOpenDispute }: { challenge: Challe
     queryFn: async () => {
       const { data, error } = await supabase
         .from("messages")
-        .select("*, sender:profiles!messages_sender_id_fkey(username, display_name, avatar_url)")
+        .select("*")
         .eq("challenge_id", challenge.id)
         .order("created_at", { ascending: true });
       if (error) throw error;
-      return (data ?? []) as Msg[];
+      const rows = (data ?? []) as Omit<Msg, "sender">[];
+      const ids = Array.from(new Set(rows.map((r) => r.sender_id)));
+      let profilesMap: Record<string, Msg["sender"]> = {};
+      if (ids.length) {
+        const { data: profs } = await supabase.from("profiles").select("id, username, display_name, avatar_url").in("id", ids);
+        profilesMap = Object.fromEntries((profs ?? []).map((p: any) => [p.id, { username: p.username, display_name: p.display_name, avatar_url: p.avatar_url }]));
+      }
+      return rows.map((r) => ({ ...r, sender: profilesMap[r.sender_id] ?? null })) as Msg[];
     },
     enabled: !!user,
   });
