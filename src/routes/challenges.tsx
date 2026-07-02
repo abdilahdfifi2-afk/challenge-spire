@@ -39,17 +39,11 @@ function ChallengesPage() {
     return () => { supabase.removeChannel(ch); };
   }, [qc]);
 
-  const accept = async (id: string, entryFee: number) => {
+  const accept = async (id: string) => {
     if (!user) { toast.error("سجّل دخولك أولاً"); return; }
-    // Check wallet
-    const { data: w } = await supabase.from("wallets").select("balance").eq("user_id", user.id).maybeSingle();
-    if (Number(w?.balance ?? 0) < entryFee) { toast.error("رصيدك غير كافٍ لدخول هذا التحدي"); return; }
-    const { error } = await supabase.from("challenges").update({
-      opponent_id: user.id,
-      status: "in_progress",
-    }).eq("id", id).eq("status", "open");
-    if (error) { toast.error(error.message); return; }
-    toast.success("انضممت للتحدي — بالتوفيق!");
+    const { error } = await supabase.rpc("join_challenge", { _challenge_id: id });
+    if (error) { toast.error(translateFinancialError(error.message)); return; }
+    toast.success("انضممت للتحدي — حُجزت الرسوم. بالتوفيق!");
   };
 
   return (
