@@ -9,38 +9,376 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TournamentsRouteImport } from './routes/tournaments'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as PredictionsRouteImport } from './routes/predictions'
+import { Route as LeaderboardRouteImport } from './routes/leaderboard'
+import { Route as ChallengesRouteImport } from './routes/challenges'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
+import { Route as AuthenticatedWalletIndexRouteImport } from './routes/_authenticated/wallet.index'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
+import { Route as AuthenticatedWalletWithdrawRouteImport } from './routes/_authenticated/wallet.withdraw'
+import { Route as AuthenticatedWalletDepositRouteImport } from './routes/_authenticated/wallet.deposit'
+import { Route as AuthenticatedChallengesCreateRouteImport } from './routes/_authenticated/challenges.create'
+import { Route as AuthenticatedAdminWithdrawalsRouteImport } from './routes/_authenticated/admin/withdrawals'
+import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin/users'
+import { Route as AuthenticatedAdminTournamentsRouteImport } from './routes/_authenticated/admin/tournaments'
+import { Route as AuthenticatedAdminPredictionsRouteImport } from './routes/_authenticated/admin/predictions'
+import { Route as AuthenticatedAdminLogsRouteImport } from './routes/_authenticated/admin/logs'
+import { Route as AuthenticatedAdminGamesRouteImport } from './routes/_authenticated/admin/games'
+import { Route as AuthenticatedAdminDisputesRouteImport } from './routes/_authenticated/admin/disputes'
+import { Route as AuthenticatedAdminDepositsRouteImport } from './routes/_authenticated/admin/deposits'
+import { Route as AuthenticatedAdminBanksRouteImport } from './routes/_authenticated/admin/banks'
 
+const TournamentsRoute = TournamentsRouteImport.update({
+  id: '/tournaments',
+  path: '/tournaments',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PredictionsRoute = PredictionsRouteImport.update({
+  id: '/predictions',
+  path: '/predictions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LeaderboardRoute = LeaderboardRouteImport.update({
+  id: '/leaderboard',
+  path: '/leaderboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChallengesRoute = ChallengesRouteImport.update({
+  id: '/challenges',
+  path: '/challenges',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedWalletIndexRoute =
+  AuthenticatedWalletIndexRouteImport.update({
+    id: '/wallet/',
+    path: '/wallet/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRouteRoute,
+} as any)
+const AuthenticatedWalletWithdrawRoute =
+  AuthenticatedWalletWithdrawRouteImport.update({
+    id: '/wallet/withdraw',
+    path: '/wallet/withdraw',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedWalletDepositRoute =
+  AuthenticatedWalletDepositRouteImport.update({
+    id: '/wallet/deposit',
+    path: '/wallet/deposit',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedChallengesCreateRoute =
+  AuthenticatedChallengesCreateRouteImport.update({
+    id: '/challenges/create',
+    path: '/challenges/create',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAdminWithdrawalsRoute =
+  AuthenticatedAdminWithdrawalsRouteImport.update({
+    id: '/withdrawals',
+    path: '/withdrawals',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AuthenticatedAdminRouteRoute,
+} as any)
+const AuthenticatedAdminTournamentsRoute =
+  AuthenticatedAdminTournamentsRouteImport.update({
+    id: '/tournaments',
+    path: '/tournaments',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminPredictionsRoute =
+  AuthenticatedAdminPredictionsRouteImport.update({
+    id: '/predictions',
+    path: '/predictions',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminLogsRoute = AuthenticatedAdminLogsRouteImport.update({
+  id: '/logs',
+  path: '/logs',
+  getParentRoute: () => AuthenticatedAdminRouteRoute,
+} as any)
+const AuthenticatedAdminGamesRoute = AuthenticatedAdminGamesRouteImport.update({
+  id: '/games',
+  path: '/games',
+  getParentRoute: () => AuthenticatedAdminRouteRoute,
+} as any)
+const AuthenticatedAdminDisputesRoute =
+  AuthenticatedAdminDisputesRouteImport.update({
+    id: '/disputes',
+    path: '/disputes',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminDepositsRoute =
+  AuthenticatedAdminDepositsRouteImport.update({
+    id: '/deposits',
+    path: '/deposits',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminBanksRoute = AuthenticatedAdminBanksRouteImport.update({
+  id: '/banks',
+  path: '/banks',
+  getParentRoute: () => AuthenticatedAdminRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/challenges': typeof ChallengesRoute
+  '/leaderboard': typeof LeaderboardRoute
+  '/predictions': typeof PredictionsRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/tournaments': typeof TournamentsRoute
+  '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
+  '/profile': typeof AuthenticatedProfileRoute
+  '/admin/banks': typeof AuthenticatedAdminBanksRoute
+  '/admin/deposits': typeof AuthenticatedAdminDepositsRoute
+  '/admin/disputes': typeof AuthenticatedAdminDisputesRoute
+  '/admin/games': typeof AuthenticatedAdminGamesRoute
+  '/admin/logs': typeof AuthenticatedAdminLogsRoute
+  '/admin/predictions': typeof AuthenticatedAdminPredictionsRoute
+  '/admin/tournaments': typeof AuthenticatedAdminTournamentsRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/admin/withdrawals': typeof AuthenticatedAdminWithdrawalsRoute
+  '/challenges/create': typeof AuthenticatedChallengesCreateRoute
+  '/wallet/deposit': typeof AuthenticatedWalletDepositRoute
+  '/wallet/withdraw': typeof AuthenticatedWalletWithdrawRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/wallet/': typeof AuthenticatedWalletIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/challenges': typeof ChallengesRoute
+  '/leaderboard': typeof LeaderboardRoute
+  '/predictions': typeof PredictionsRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/tournaments': typeof TournamentsRoute
+  '/profile': typeof AuthenticatedProfileRoute
+  '/admin/banks': typeof AuthenticatedAdminBanksRoute
+  '/admin/deposits': typeof AuthenticatedAdminDepositsRoute
+  '/admin/disputes': typeof AuthenticatedAdminDisputesRoute
+  '/admin/games': typeof AuthenticatedAdminGamesRoute
+  '/admin/logs': typeof AuthenticatedAdminLogsRoute
+  '/admin/predictions': typeof AuthenticatedAdminPredictionsRoute
+  '/admin/tournaments': typeof AuthenticatedAdminTournamentsRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/admin/withdrawals': typeof AuthenticatedAdminWithdrawalsRoute
+  '/challenges/create': typeof AuthenticatedChallengesCreateRoute
+  '/wallet/deposit': typeof AuthenticatedWalletDepositRoute
+  '/wallet/withdraw': typeof AuthenticatedWalletWithdrawRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
+  '/wallet': typeof AuthenticatedWalletIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/challenges': typeof ChallengesRoute
+  '/leaderboard': typeof LeaderboardRoute
+  '/predictions': typeof PredictionsRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/tournaments': typeof TournamentsRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/_authenticated/admin/banks': typeof AuthenticatedAdminBanksRoute
+  '/_authenticated/admin/deposits': typeof AuthenticatedAdminDepositsRoute
+  '/_authenticated/admin/disputes': typeof AuthenticatedAdminDisputesRoute
+  '/_authenticated/admin/games': typeof AuthenticatedAdminGamesRoute
+  '/_authenticated/admin/logs': typeof AuthenticatedAdminLogsRoute
+  '/_authenticated/admin/predictions': typeof AuthenticatedAdminPredictionsRoute
+  '/_authenticated/admin/tournaments': typeof AuthenticatedAdminTournamentsRoute
+  '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/_authenticated/admin/withdrawals': typeof AuthenticatedAdminWithdrawalsRoute
+  '/_authenticated/challenges/create': typeof AuthenticatedChallengesCreateRoute
+  '/_authenticated/wallet/deposit': typeof AuthenticatedWalletDepositRoute
+  '/_authenticated/wallet/withdraw': typeof AuthenticatedWalletWithdrawRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/wallet/': typeof AuthenticatedWalletIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/challenges'
+    | '/leaderboard'
+    | '/predictions'
+    | '/reset-password'
+    | '/tournaments'
+    | '/admin'
+    | '/profile'
+    | '/admin/banks'
+    | '/admin/deposits'
+    | '/admin/disputes'
+    | '/admin/games'
+    | '/admin/logs'
+    | '/admin/predictions'
+    | '/admin/tournaments'
+    | '/admin/users'
+    | '/admin/withdrawals'
+    | '/challenges/create'
+    | '/wallet/deposit'
+    | '/wallet/withdraw'
+    | '/admin/'
+    | '/wallet/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/challenges'
+    | '/leaderboard'
+    | '/predictions'
+    | '/reset-password'
+    | '/tournaments'
+    | '/profile'
+    | '/admin/banks'
+    | '/admin/deposits'
+    | '/admin/disputes'
+    | '/admin/games'
+    | '/admin/logs'
+    | '/admin/predictions'
+    | '/admin/tournaments'
+    | '/admin/users'
+    | '/admin/withdrawals'
+    | '/challenges/create'
+    | '/wallet/deposit'
+    | '/wallet/withdraw'
+    | '/admin'
+    | '/wallet'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/challenges'
+    | '/leaderboard'
+    | '/predictions'
+    | '/reset-password'
+    | '/tournaments'
+    | '/_authenticated/admin'
+    | '/_authenticated/profile'
+    | '/_authenticated/admin/banks'
+    | '/_authenticated/admin/deposits'
+    | '/_authenticated/admin/disputes'
+    | '/_authenticated/admin/games'
+    | '/_authenticated/admin/logs'
+    | '/_authenticated/admin/predictions'
+    | '/_authenticated/admin/tournaments'
+    | '/_authenticated/admin/users'
+    | '/_authenticated/admin/withdrawals'
+    | '/_authenticated/challenges/create'
+    | '/_authenticated/wallet/deposit'
+    | '/_authenticated/wallet/withdraw'
+    | '/_authenticated/admin/'
+    | '/_authenticated/wallet/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  ChallengesRoute: typeof ChallengesRoute
+  LeaderboardRoute: typeof LeaderboardRoute
+  PredictionsRoute: typeof PredictionsRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
+  TournamentsRoute: typeof TournamentsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tournaments': {
+      id: '/tournaments'
+      path: '/tournaments'
+      fullPath: '/tournaments'
+      preLoaderRoute: typeof TournamentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/predictions': {
+      id: '/predictions'
+      path: '/predictions'
+      fullPath: '/predictions'
+      preLoaderRoute: typeof PredictionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/leaderboard': {
+      id: '/leaderboard'
+      path: '/leaderboard'
+      fullPath: '/leaderboard'
+      preLoaderRoute: typeof LeaderboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/challenges': {
+      id: '/challenges'
+      path: '/challenges'
+      fullPath: '/challenges'
+      preLoaderRoute: typeof ChallengesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +386,184 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/wallet/': {
+      id: '/_authenticated/wallet/'
+      path: '/wallet'
+      fullPath: '/wallet/'
+      preLoaderRoute: typeof AuthenticatedWalletIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/wallet/withdraw': {
+      id: '/_authenticated/wallet/withdraw'
+      path: '/wallet/withdraw'
+      fullPath: '/wallet/withdraw'
+      preLoaderRoute: typeof AuthenticatedWalletWithdrawRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/wallet/deposit': {
+      id: '/_authenticated/wallet/deposit'
+      path: '/wallet/deposit'
+      fullPath: '/wallet/deposit'
+      preLoaderRoute: typeof AuthenticatedWalletDepositRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/challenges/create': {
+      id: '/_authenticated/challenges/create'
+      path: '/challenges/create'
+      fullPath: '/challenges/create'
+      preLoaderRoute: typeof AuthenticatedChallengesCreateRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/withdrawals': {
+      id: '/_authenticated/admin/withdrawals'
+      path: '/withdrawals'
+      fullPath: '/admin/withdrawals'
+      preLoaderRoute: typeof AuthenticatedAdminWithdrawalsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/users': {
+      id: '/_authenticated/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/tournaments': {
+      id: '/_authenticated/admin/tournaments'
+      path: '/tournaments'
+      fullPath: '/admin/tournaments'
+      preLoaderRoute: typeof AuthenticatedAdminTournamentsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/predictions': {
+      id: '/_authenticated/admin/predictions'
+      path: '/predictions'
+      fullPath: '/admin/predictions'
+      preLoaderRoute: typeof AuthenticatedAdminPredictionsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/logs': {
+      id: '/_authenticated/admin/logs'
+      path: '/logs'
+      fullPath: '/admin/logs'
+      preLoaderRoute: typeof AuthenticatedAdminLogsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/games': {
+      id: '/_authenticated/admin/games'
+      path: '/games'
+      fullPath: '/admin/games'
+      preLoaderRoute: typeof AuthenticatedAdminGamesRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/disputes': {
+      id: '/_authenticated/admin/disputes'
+      path: '/disputes'
+      fullPath: '/admin/disputes'
+      preLoaderRoute: typeof AuthenticatedAdminDisputesRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/deposits': {
+      id: '/_authenticated/admin/deposits'
+      path: '/deposits'
+      fullPath: '/admin/deposits'
+      preLoaderRoute: typeof AuthenticatedAdminDepositsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/banks': {
+      id: '/_authenticated/admin/banks'
+      path: '/banks'
+      fullPath: '/admin/banks'
+      preLoaderRoute: typeof AuthenticatedAdminBanksRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
   }
 }
 
+interface AuthenticatedAdminRouteRouteChildren {
+  AuthenticatedAdminBanksRoute: typeof AuthenticatedAdminBanksRoute
+  AuthenticatedAdminDepositsRoute: typeof AuthenticatedAdminDepositsRoute
+  AuthenticatedAdminDisputesRoute: typeof AuthenticatedAdminDisputesRoute
+  AuthenticatedAdminGamesRoute: typeof AuthenticatedAdminGamesRoute
+  AuthenticatedAdminLogsRoute: typeof AuthenticatedAdminLogsRoute
+  AuthenticatedAdminPredictionsRoute: typeof AuthenticatedAdminPredictionsRoute
+  AuthenticatedAdminTournamentsRoute: typeof AuthenticatedAdminTournamentsRoute
+  AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
+  AuthenticatedAdminWithdrawalsRoute: typeof AuthenticatedAdminWithdrawalsRoute
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
+  {
+    AuthenticatedAdminBanksRoute: AuthenticatedAdminBanksRoute,
+    AuthenticatedAdminDepositsRoute: AuthenticatedAdminDepositsRoute,
+    AuthenticatedAdminDisputesRoute: AuthenticatedAdminDisputesRoute,
+    AuthenticatedAdminGamesRoute: AuthenticatedAdminGamesRoute,
+    AuthenticatedAdminLogsRoute: AuthenticatedAdminLogsRoute,
+    AuthenticatedAdminPredictionsRoute: AuthenticatedAdminPredictionsRoute,
+    AuthenticatedAdminTournamentsRoute: AuthenticatedAdminTournamentsRoute,
+    AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
+    AuthenticatedAdminWithdrawalsRoute: AuthenticatedAdminWithdrawalsRoute,
+    AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+  }
+
+const AuthenticatedAdminRouteRouteWithChildren =
+  AuthenticatedAdminRouteRoute._addFileChildren(
+    AuthenticatedAdminRouteRouteChildren,
+  )
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedChallengesCreateRoute: typeof AuthenticatedChallengesCreateRoute
+  AuthenticatedWalletDepositRoute: typeof AuthenticatedWalletDepositRoute
+  AuthenticatedWalletWithdrawRoute: typeof AuthenticatedWalletWithdrawRoute
+  AuthenticatedWalletIndexRoute: typeof AuthenticatedWalletIndexRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRouteWithChildren,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+  AuthenticatedChallengesCreateRoute: AuthenticatedChallengesCreateRoute,
+  AuthenticatedWalletDepositRoute: AuthenticatedWalletDepositRoute,
+  AuthenticatedWalletWithdrawRoute: AuthenticatedWalletWithdrawRoute,
+  AuthenticatedWalletIndexRoute: AuthenticatedWalletIndexRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
+  ChallengesRoute: ChallengesRoute,
+  LeaderboardRoute: LeaderboardRoute,
+  PredictionsRoute: PredictionsRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
+  TournamentsRoute: TournamentsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
