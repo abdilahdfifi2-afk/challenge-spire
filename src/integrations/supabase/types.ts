@@ -322,6 +322,47 @@ export type Database = {
           },
         ]
       }
+      messages: {
+        Row: {
+          challenge_id: string
+          created_at: string
+          id: string
+          image_url: string | null
+          is_read: boolean
+          message: string | null
+          message_type: string
+          sender_id: string
+        }
+        Insert: {
+          challenge_id: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          is_read?: boolean
+          message?: string | null
+          message_type?: string
+          sender_id: string
+        }
+        Update: {
+          challenge_id?: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          is_read?: boolean
+          message?: string | null
+          message_type?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notifications: {
         Row: {
           body: string | null
@@ -737,6 +778,10 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      is_challenge_participant: {
+        Args: { _challenge_id: string; _user_id: string }
         Returns: boolean
       }
     }
