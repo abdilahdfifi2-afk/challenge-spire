@@ -161,24 +161,7 @@ function ChallengeDetailPage() {
               )}
 
               {isParticipant && c.status === "in_progress" && c.match_started_at && new Date(c.match_started_at) <= new Date() && !disputeQ.data && (
-                <div className="mt-5 rounded-md border border-primary/30 bg-primary/5 p-4">
-                  <div className="flex items-center gap-2 text-sm font-semibold mb-3">
-                    <Trophy className="h-4 w-4 text-primary" /> تقديم نتيجة المباراة
-                  </div>
-                  {myResult ? (
-                    <div className="text-xs text-muted-foreground">
-                      قدّمت نتيجتك: الفائز = <span className="font-semibold text-foreground">{myResult.claimed_winner === c.creator_id ? (creator?.display_name || creator?.username) : (opponent?.display_name || opponent?.username)}</span>
-                    </div>
-                  ) : (
-                    <>
-                      <p className="text-xs text-muted-foreground mb-3">اختر الفائز الحقيقي. إن اتفق الطرفان تُصرف الجائزة تلقائياً، وإلا يُفتح نزاع.</p>
-                      <div className="grid grid-cols-2 gap-2">
-                        <Button size="sm" onClick={() => submitResult(c.creator_id)}>ربح: {creator?.display_name || creator?.username || "المُنشئ"}</Button>
-                        {c.opponent_id && <Button size="sm" onClick={() => submitResult(c.opponent_id)}>ربح: {opponent?.display_name || opponent?.username || "الخصم"}</Button>}
-                      </div>
-                    </>
-                  )}
-                </div>
+                <ResultSubmit challenge={c} creator={creator} opponent={opponent} myResult={myResult} onSubmit={submitResult} title="تقديم نتيجة المباراة" />
               )}
 
               {isParticipant && c.status === "awaiting_confirmation" && !disputeQ.data && myResult && (
@@ -188,15 +171,7 @@ function ChallengeDetailPage() {
               )}
 
               {isParticipant && c.status === "awaiting_confirmation" && !disputeQ.data && !myResult && (
-                <div className="mt-5 rounded-md border border-primary/30 bg-primary/5 p-4">
-                  <div className="flex items-center gap-2 text-sm font-semibold mb-3">
-                    <Trophy className="h-4 w-4 text-primary" /> خصمك قدّم نتيجة — أكّد أو اعترض
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <Button size="sm" onClick={() => submitResult(c.creator_id)}>ربح: {creator?.display_name || creator?.username}</Button>
-                    {c.opponent_id && <Button size="sm" onClick={() => submitResult(c.opponent_id)}>ربح: {opponent?.display_name || opponent?.username}</Button>}
-                  </div>
-                </div>
+                <ResultSubmit challenge={c} creator={creator} opponent={opponent} myResult={null} onSubmit={submitResult} title="خصمك قدّم نتيجة — أكّد أو اعترض" />
               )}
 
               {isParticipant && (c.status === "in_progress" || c.status === "awaiting_confirmation") && !disputeQ.data && (
