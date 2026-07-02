@@ -73,15 +73,40 @@ function ChallengeDetailPage() {
   const opponent = c.opponent_id ? parties[c.opponent_id] : null;
   const isParticipant = user && (user.id === c.creator_id || user.id === c.opponent_id);
 
+  // Query my submitted result (if any)
+  const myResultQ = useQuery({
+    queryKey: ["challenge-my-result", challengeId, user?.id],
+    enabled: !!user,
+    queryFn: async () => (await supabase.from("match_results").select("id, claimed_winner, status").eq("challenge_id", challengeId).eq("submitted_by", user!.id).maybeSingle()).data,
+  });
+
   const openDispute = async () => {
     if (!user || !isParticipant) return;
+    const reason = window.prompt("سبب فتح النزاع:") ?? "";
+    if (!reason.trim()) return;
     const { error } = await supabase.from("disputes").insert({
       challenge_id: c.id,
       opened_by: user.id,
       status: "open",
-      reason: "نزاع مفتوح من أحد اللاعبين",
+      reason,
     });
     if (error) toast.error(error.message); else toast.success("تم فتح نزاع — سيراجعه الأدمن");
+  };
+
+  const cancelChallenge = async () => {
+    if (!confirm("إلغاء التحدي واسترداد الرسوم؟")) return;
+    const { error } = await supabase.rpc("cancel_challenge", { _challenge_id: c.id });
+    if (error) { toast.error(translateFinancialError(error.message)); return; }
+    toast.success("تم الإلغاء وإعادة الرسوم إلى محفظتك");
+  };
+
+  const submitResult = async (winner: string) => {
+    const { data, error } = await supabase.rpc("submit_challenge_result", { _challenge_id: c.id, _winner: winner });
+    if (error) { toast.error(translateFinancialError(error.message)); return; }
+    qc.invalidateQueries({ queryKey: ["challenge-my-result", challengeId] });
+    if (data === "settled") toast.success("تمت التسوية — تم توزيع الجائزة");
+    else if (data === "disputed") toast.warning("اختلاف في النتائج — تم فتح نزاع تلقائياً");
+    else toast.success("تم تسجيل نتيجتك — بانتظار الخصم");
   };
 
   return (
