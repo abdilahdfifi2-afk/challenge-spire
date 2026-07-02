@@ -145,15 +145,49 @@ function ChallengeDetailPage() {
                 <div className="col-span-2 text-xs text-muted-foreground">أُنشئ في {formatDate(c.created_at)}</div>
               </div>
 
-              {isParticipant && c.status === "in_progress" && !disputeQ.data && (
-                <Button variant="outline" onClick={openDispute} className="mt-4 w-full gap-2 border-destructive/40 text-destructive hover:bg-destructive/10">
+              {isParticipant && c.status === "open" && user?.id === c.creator_id && (
+                <Button variant="outline" onClick={cancelChallenge} className="mt-4 w-full gap-2 border-destructive/40 text-destructive hover:bg-destructive/10">
+                  <XCircle className="h-4 w-4" /> إلغاء التحدي واسترداد الرسوم
+                </Button>
+              )}
+
+              {isParticipant && (c.status === "in_progress" || c.status === "awaiting_confirmation") && !disputeQ.data && (
+                <div className="mt-5 rounded-md border border-primary/30 bg-primary/5 p-4">
+                  <div className="flex items-center gap-2 text-sm font-semibold mb-3">
+                    <Trophy className="h-4 w-4 text-primary" /> تقديم نتيجة المباراة
+                  </div>
+                  {myResult ? (
+                    <div className="text-xs text-muted-foreground">
+                      قدّمت نتيجتك: الفائز = <span className="font-semibold text-foreground">{myResult.claimed_winner === c.creator_id ? (creator?.display_name || creator?.username) : (opponent?.display_name || opponent?.username)}</span>
+                      {c.status === "awaiting_confirmation" && <span className="block mt-1">بانتظار تأكيد الخصم…</span>}
+                    </div>
+                  ) : (
+                    <>
+                      <p className="text-xs text-muted-foreground mb-3">اختر الفائز الحقيقي. إن اتفق الطرفان تُصرف الجائزة تلقائياً، وإلا يُفتح نزاع.</p>
+                      <div className="grid grid-cols-2 gap-2">
+                        <Button size="sm" onClick={() => submitResult(c.creator_id)}>ربح: {creator?.display_name || creator?.username || "المُنشئ"}</Button>
+                        {c.opponent_id && <Button size="sm" onClick={() => submitResult(c.opponent_id)}>ربح: {opponent?.display_name || opponent?.username || "الخصم"}</Button>}
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+
+              {isParticipant && (c.status === "in_progress" || c.status === "awaiting_confirmation") && !disputeQ.data && (
+                <Button variant="outline" onClick={openDispute} className="mt-3 w-full gap-2 border-destructive/40 text-destructive hover:bg-destructive/10">
                   <AlertTriangle className="h-4 w-4" /> فتح نزاع
                 </Button>
               )}
               {disputeQ.data && (
                 <div className="mt-4 rounded-md border border-warning/30 bg-warning/10 text-warning text-xs p-3 flex items-center gap-2">
-                  <AlertTriangle className="h-4 w-4" /> يوجد نزاع مفتوح — الدردشة تبقى مفتوحة حتى الحل.
+                  <AlertTriangle className="h-4 w-4" /> يوجد نزاع مفتوح — بانتظار مراجعة الأدمن.
                 </div>
+              )}
+              {c.status === "completed" && (
+                <div className="mt-4 rounded-md border border-success/30 bg-success/10 text-success text-xs p-3">تم إنهاء التحدي وتوزيع الجائزة.</div>
+              )}
+              {c.status === "cancelled" && (
+                <div className="mt-4 rounded-md border border-muted bg-muted/30 text-muted-foreground text-xs p-3">تم إلغاء التحدي واسترداد الرسوم.</div>
               )}
             </div>
           </div>
