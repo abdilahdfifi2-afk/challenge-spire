@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Trophy, Wallet, Home, Swords, Target, User, Shield, Menu, X, LogOut } from "lucide-react";
+import { Trophy, Wallet, Home, Swords, Target, User, Shield, Menu, X, LogOut, Crown } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ const nav = [
   { to: "/challenges", label: "التحديات", icon: Swords },
   { to: "/tournaments", label: "البطولات", icon: Trophy },
   { to: "/predictions", label: "التوقعات", icon: Target },
+  { to: "/king-of-arena", label: "ملك الحلبة", icon: Crown },
   { to: "/leaderboard", label: "التصنيف", icon: Trophy },
 ] as const;
 
