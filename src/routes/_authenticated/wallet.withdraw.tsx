@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { formatCurrency } from "@/lib/format";
+import { translateFinancialError } from "@/lib/rpc-errors";
 
 export const Route = createFileRoute("/_authenticated/wallet/withdraw")({
   head: () => ({ meta: [{ title: "سحب — ArenaX" }] }),
@@ -33,34 +34,49 @@ function WithdrawPage() {
     },
   });
 
+  const settings = useQuery({
+    queryKey: ["platform-settings"],
+    queryFn: async () => (await supabase.from("platform_settings").select("*").maybeSingle()).data,
+  });
+
+  const available = Number(wallet.data?.balance ?? 0) - Number(wallet.data?.locked_balance ?? 0);
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
     const amt = parseFloat(amount);
     if (!amt || amt <= 0) { toast.error("مبلغ غير صالح"); return; }
-    if (amt > Number(wallet.data?.balance ?? 0)) { toast.error("الرصيد غير كافٍ"); return; }
     setLoading(true);
-    const { error } = await supabase.from("withdrawals").insert({
-      user_id: user.id,
-      method,
-      account_holder: holder,
-      bank_name: bankName || null,
-      account_number: account,
-      amount: amt,
-      currency: wallet.data?.currency ?? "MAD",
+    const { error } = await supabase.rpc("create_withdrawal", {
+      _method: method,
+      _account_holder: holder,
+      _bank_name: bankName,
+      _account_number: account,
+      _amount: amt,
     });
     setLoading(false);
-    if (error) { toast.error(error.message); return; }
-    toast.success("تم إرسال طلب السحب للمراجعة");
+    if (error) { toast.error(translateFinancialError(error.message)); return; }
+    toast.success("تم إرسال طلب السحب — حُجز المبلغ حتى المعالجة");
     nav({ to: "/wallet" });
   };
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
       <h1 className="font-display text-3xl font-bold mb-2">سحب</h1>
-      <p className="text-sm text-muted-foreground mb-6">
-        رصيدك المتاح: <span className="font-bold text-gradient-primary">{formatCurrency(wallet.data?.balance ?? 0)}</span>
+      <p className="text-sm text-muted-foreground mb-1">
+        الرصيد الإجمالي: <span className="font-semibold">{formatCurrency(wallet.data?.balance ?? 0)}</span>
       </p>
+      <p className="text-sm text-muted-foreground mb-6">
+        المتاح للسحب: <span className="font-bold text-gradient-primary">{formatCurrency(available)}</span>
+        {Number(wallet.data?.locked_balance ?? 0) > 0 && (
+          <span className="text-warning ms-2">({formatCurrency(wallet.data?.locked_balance ?? 0)} محجوز)</span>
+        )}
+      </p>
+      {settings.data && (
+        <p className="text-xs text-muted-foreground mb-4">
+          الحد الأدنى: {formatCurrency(settings.data.min_withdrawal)} — الحد الأقصى: {formatCurrency(settings.data.max_withdrawal)}
+        </p>
+      )}
 
       <form onSubmit={submit} className="card-elevated p-6 space-y-5">
         <div>

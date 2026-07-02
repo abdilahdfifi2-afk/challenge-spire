@@ -396,6 +396,42 @@ export type Database = {
         }
         Relationships: []
       }
+      platform_settings: {
+        Row: {
+          commission_pct: number
+          id: boolean
+          max_challenge_fee: number
+          max_deposit: number
+          max_withdrawal: number
+          min_challenge_fee: number
+          min_deposit: number
+          min_withdrawal: number
+          updated_at: string
+        }
+        Insert: {
+          commission_pct?: number
+          id?: boolean
+          max_challenge_fee?: number
+          max_deposit?: number
+          max_withdrawal?: number
+          min_challenge_fee?: number
+          min_deposit?: number
+          min_withdrawal?: number
+          updated_at?: string
+        }
+        Update: {
+          commission_pct?: number
+          id?: boolean
+          max_challenge_fee?: number
+          max_deposit?: number
+          max_withdrawal?: number
+          min_challenge_fee?: number
+          min_deposit?: number
+          min_withdrawal?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       prediction_entries: {
         Row: {
           amount: number
@@ -773,6 +809,83 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      _audit: {
+        Args: {
+          _action: string
+          _actor: string
+          _entity: string
+          _entity_id: string
+          _meta: Json
+        }
+        Returns: undefined
+      }
+      _notify: {
+        Args: {
+          _body: string
+          _link: string
+          _title: string
+          _type: string
+          _user: string
+        }
+        Returns: undefined
+      }
+      _settle_challenge: {
+        Args: {
+          _c: Database["public"]["Tables"]["challenges"]["Row"]
+          _winner: string
+        }
+        Returns: undefined
+      }
+      _wallet_change: {
+        Args: {
+          _amount: number
+          _balance_delta: number
+          _desc: string
+          _lock_delta: number
+          _ref: string
+          _tx_type: Database["public"]["Enums"]["tx_type"]
+          _user: string
+        }
+        Returns: number
+      }
+      admin_approve_deposit: {
+        Args: { _deposit_id: string }
+        Returns: undefined
+      }
+      admin_approve_withdrawal: { Args: { _wd_id: string }; Returns: undefined }
+      admin_reject_deposit: {
+        Args: { _deposit_id: string; _note: string }
+        Returns: undefined
+      }
+      admin_reject_withdrawal: {
+        Args: { _note: string; _wd_id: string }
+        Returns: undefined
+      }
+      admin_resolve_dispute: {
+        Args: { _dispute_id: string; _resolution: string; _winner: string }
+        Returns: undefined
+      }
+      cancel_challenge: { Args: { _challenge_id: string }; Returns: undefined }
+      cancel_withdrawal: { Args: { _wd_id: string }; Returns: undefined }
+      create_challenge_with_lock: {
+        Args: {
+          _entry_fee: number
+          _game_id: string
+          _rules: string
+          _title: string
+        }
+        Returns: string
+      }
+      create_withdrawal: {
+        Args: {
+          _account_holder: string
+          _account_number: string
+          _amount: number
+          _bank_name: string
+          _method: string
+        }
+        Returns: string
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -783,6 +896,11 @@ export type Database = {
       is_challenge_participant: {
         Args: { _challenge_id: string; _user_id: string }
         Returns: boolean
+      }
+      join_challenge: { Args: { _challenge_id: string }; Returns: undefined }
+      submit_challenge_result: {
+        Args: { _challenge_id: string; _winner: string }
+        Returns: string
       }
     }
     Enums: {

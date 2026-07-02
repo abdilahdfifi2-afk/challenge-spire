@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { toast } from "sonner";
@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { ChallengeChat } from "@/components/challenge-chat";
 import { formatCurrency, formatDate } from "@/lib/format";
 import { gameCover } from "@/lib/media";
-import { ArrowRight, AlertTriangle } from "lucide-react";
+import { translateFinancialError } from "@/lib/rpc-errors";
+import { ArrowRight, AlertTriangle, Trophy, XCircle } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/challenges/$challengeId")({
   head: () => ({ meta: [{ title: "تفاصيل التحدي — ArenaX" }] }),
@@ -53,12 +54,20 @@ function ChallengeDetailPage() {
     },
   });
 
+  const myResultQ = useQuery({
+    queryKey: ["challenge-my-result", challengeId, user?.id],
+    enabled: !!user,
+    queryFn: async () => (await supabase.from("match_results").select("id, claimed_winner, status").eq("challenge_id", challengeId).eq("submitted_by", user!.id).maybeSingle()).data,
+  });
+
   useEffect(() => {
     const ch = supabase.channel(`challenge-${challengeId}-rt`)
       .on("postgres_changes", { event: "*", schema: "public", table: "challenges", filter: `id=eq.${challengeId}` },
         () => qc.invalidateQueries({ queryKey: ["challenge", challengeId] }))
       .on("postgres_changes", { event: "*", schema: "public", table: "disputes", filter: `challenge_id=eq.${challengeId}` },
         () => qc.invalidateQueries({ queryKey: ["challenge-dispute", challengeId] }))
+      .on("postgres_changes", { event: "*", schema: "public", table: "match_results", filter: `challenge_id=eq.${challengeId}` },
+        () => qc.invalidateQueries({ queryKey: ["challenge-my-result", challengeId] }))
       .subscribe();
     return () => { supabase.removeChannel(ch); };
   }, [challengeId, qc]);
@@ -71,16 +80,35 @@ function ChallengeDetailPage() {
   const creator = parties[c.creator_id];
   const opponent = c.opponent_id ? parties[c.opponent_id] : null;
   const isParticipant = user && (user.id === c.creator_id || user.id === c.opponent_id);
+  const myResult = myResultQ.data;
 
   const openDispute = async () => {
     if (!user || !isParticipant) return;
+    const reason = window.prompt("سبب فتح النزاع:") ?? "";
+    if (!reason.trim()) return;
     const { error } = await supabase.from("disputes").insert({
       challenge_id: c.id,
       opened_by: user.id,
       status: "open",
-      reason: "نزاع مفتوح من أحد اللاعبين",
+      reason,
     });
     if (error) toast.error(error.message); else toast.success("تم فتح نزاع — سيراجعه الأدمن");
+  };
+
+  const cancelChallenge = async () => {
+    if (!confirm("إلغاء التحدي واسترداد الرسوم؟")) return;
+    const { error } = await supabase.rpc("cancel_challenge", { _challenge_id: c.id });
+    if (error) { toast.error(translateFinancialError(error.message)); return; }
+    toast.success("تم الإلغاء وإعادة الرسوم إلى محفظتك");
+  };
+
+  const submitResult = async (winner: string) => {
+    const { data, error } = await supabase.rpc("submit_challenge_result", { _challenge_id: c.id, _winner: winner });
+    if (error) { toast.error(translateFinancialError(error.message)); return; }
+    qc.invalidateQueries({ queryKey: ["challenge-my-result", challengeId] });
+    if (data === "settled") toast.success("تمت التسوية — تم توزيع الجائزة");
+    else if (data === "disputed") toast.warning("اختلاف في النتائج — تم فتح نزاع تلقائياً");
+    else toast.success("تم تسجيل نتيجتك — بانتظار الخصم");
   };
 
   return (
@@ -117,15 +145,49 @@ function ChallengeDetailPage() {
                 <div className="col-span-2 text-xs text-muted-foreground">أُنشئ في {formatDate(c.created_at)}</div>
               </div>
 
-              {isParticipant && c.status === "in_progress" && !disputeQ.data && (
-                <Button variant="outline" onClick={openDispute} className="mt-4 w-full gap-2 border-destructive/40 text-destructive hover:bg-destructive/10">
+              {isParticipant && c.status === "open" && user?.id === c.creator_id && (
+                <Button variant="outline" onClick={cancelChallenge} className="mt-4 w-full gap-2 border-destructive/40 text-destructive hover:bg-destructive/10">
+                  <XCircle className="h-4 w-4" /> إلغاء التحدي واسترداد الرسوم
+                </Button>
+              )}
+
+              {isParticipant && (c.status === "in_progress" || c.status === "awaiting_confirmation") && !disputeQ.data && (
+                <div className="mt-5 rounded-md border border-primary/30 bg-primary/5 p-4">
+                  <div className="flex items-center gap-2 text-sm font-semibold mb-3">
+                    <Trophy className="h-4 w-4 text-primary" /> تقديم نتيجة المباراة
+                  </div>
+                  {myResult ? (
+                    <div className="text-xs text-muted-foreground">
+                      قدّمت نتيجتك: الفائز = <span className="font-semibold text-foreground">{myResult.claimed_winner === c.creator_id ? (creator?.display_name || creator?.username) : (opponent?.display_name || opponent?.username)}</span>
+                      {c.status === "awaiting_confirmation" && <span className="block mt-1">بانتظار تأكيد الخصم…</span>}
+                    </div>
+                  ) : (
+                    <>
+                      <p className="text-xs text-muted-foreground mb-3">اختر الفائز الحقيقي. إن اتفق الطرفان تُصرف الجائزة تلقائياً، وإلا يُفتح نزاع.</p>
+                      <div className="grid grid-cols-2 gap-2">
+                        <Button size="sm" onClick={() => submitResult(c.creator_id)}>ربح: {creator?.display_name || creator?.username || "المُنشئ"}</Button>
+                        {c.opponent_id && <Button size="sm" onClick={() => submitResult(c.opponent_id)}>ربح: {opponent?.display_name || opponent?.username || "الخصم"}</Button>}
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+
+              {isParticipant && (c.status === "in_progress" || c.status === "awaiting_confirmation") && !disputeQ.data && (
+                <Button variant="outline" onClick={openDispute} className="mt-3 w-full gap-2 border-destructive/40 text-destructive hover:bg-destructive/10">
                   <AlertTriangle className="h-4 w-4" /> فتح نزاع
                 </Button>
               )}
               {disputeQ.data && (
                 <div className="mt-4 rounded-md border border-warning/30 bg-warning/10 text-warning text-xs p-3 flex items-center gap-2">
-                  <AlertTriangle className="h-4 w-4" /> يوجد نزاع مفتوح — الدردشة تبقى مفتوحة حتى الحل.
+                  <AlertTriangle className="h-4 w-4" /> يوجد نزاع مفتوح — بانتظار مراجعة الأدمن.
                 </div>
+              )}
+              {c.status === "completed" && (
+                <div className="mt-4 rounded-md border border-success/30 bg-success/10 text-success text-xs p-3">تم إنهاء التحدي وتوزيع الجائزة.</div>
+              )}
+              {c.status === "cancelled" && (
+                <div className="mt-4 rounded-md border border-muted bg-muted/30 text-muted-foreground text-xs p-3">تم إلغاء التحدي واسترداد الرسوم.</div>
               )}
             </div>
           </div>
