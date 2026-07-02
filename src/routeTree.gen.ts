@@ -25,6 +25,12 @@ import { Route as AuthenticatedWalletWithdrawRouteImport } from './routes/_authe
 import { Route as AuthenticatedWalletDepositRouteImport } from './routes/_authenticated/wallet.deposit'
 import { Route as AuthenticatedChallengesCreateRouteImport } from './routes/_authenticated/challenges.create'
 import { Route as AuthenticatedAdminWithdrawalsRouteImport } from './routes/_authenticated/admin/withdrawals'
+import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin/users'
+import { Route as AuthenticatedAdminTournamentsRouteImport } from './routes/_authenticated/admin/tournaments'
+import { Route as AuthenticatedAdminPredictionsRouteImport } from './routes/_authenticated/admin/predictions'
+import { Route as AuthenticatedAdminLogsRouteImport } from './routes/_authenticated/admin/logs'
+import { Route as AuthenticatedAdminGamesRouteImport } from './routes/_authenticated/admin/games'
+import { Route as AuthenticatedAdminDisputesRouteImport } from './routes/_authenticated/admin/disputes'
 import { Route as AuthenticatedAdminDepositsRouteImport } from './routes/_authenticated/admin/deposits'
 import { Route as AuthenticatedAdminBanksRouteImport } from './routes/_authenticated/admin/banks'
 
@@ -112,6 +118,39 @@ const AuthenticatedAdminWithdrawalsRoute =
     path: '/withdrawals',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AuthenticatedAdminRouteRoute,
+} as any)
+const AuthenticatedAdminTournamentsRoute =
+  AuthenticatedAdminTournamentsRouteImport.update({
+    id: '/tournaments',
+    path: '/tournaments',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminPredictionsRoute =
+  AuthenticatedAdminPredictionsRouteImport.update({
+    id: '/predictions',
+    path: '/predictions',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminLogsRoute = AuthenticatedAdminLogsRouteImport.update({
+  id: '/logs',
+  path: '/logs',
+  getParentRoute: () => AuthenticatedAdminRouteRoute,
+} as any)
+const AuthenticatedAdminGamesRoute = AuthenticatedAdminGamesRouteImport.update({
+  id: '/games',
+  path: '/games',
+  getParentRoute: () => AuthenticatedAdminRouteRoute,
+} as any)
+const AuthenticatedAdminDisputesRoute =
+  AuthenticatedAdminDisputesRouteImport.update({
+    id: '/disputes',
+    path: '/disputes',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminDepositsRoute =
   AuthenticatedAdminDepositsRouteImport.update({
     id: '/deposits',
@@ -136,6 +175,12 @@ export interface FileRoutesByFullPath {
   '/profile': typeof AuthenticatedProfileRoute
   '/admin/banks': typeof AuthenticatedAdminBanksRoute
   '/admin/deposits': typeof AuthenticatedAdminDepositsRoute
+  '/admin/disputes': typeof AuthenticatedAdminDisputesRoute
+  '/admin/games': typeof AuthenticatedAdminGamesRoute
+  '/admin/logs': typeof AuthenticatedAdminLogsRoute
+  '/admin/predictions': typeof AuthenticatedAdminPredictionsRoute
+  '/admin/tournaments': typeof AuthenticatedAdminTournamentsRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/admin/withdrawals': typeof AuthenticatedAdminWithdrawalsRoute
   '/challenges/create': typeof AuthenticatedChallengesCreateRoute
   '/wallet/deposit': typeof AuthenticatedWalletDepositRoute
@@ -154,6 +199,12 @@ export interface FileRoutesByTo {
   '/profile': typeof AuthenticatedProfileRoute
   '/admin/banks': typeof AuthenticatedAdminBanksRoute
   '/admin/deposits': typeof AuthenticatedAdminDepositsRoute
+  '/admin/disputes': typeof AuthenticatedAdminDisputesRoute
+  '/admin/games': typeof AuthenticatedAdminGamesRoute
+  '/admin/logs': typeof AuthenticatedAdminLogsRoute
+  '/admin/predictions': typeof AuthenticatedAdminPredictionsRoute
+  '/admin/tournaments': typeof AuthenticatedAdminTournamentsRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/admin/withdrawals': typeof AuthenticatedAdminWithdrawalsRoute
   '/challenges/create': typeof AuthenticatedChallengesCreateRoute
   '/wallet/deposit': typeof AuthenticatedWalletDepositRoute
@@ -175,6 +226,12 @@ export interface FileRoutesById {
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/admin/banks': typeof AuthenticatedAdminBanksRoute
   '/_authenticated/admin/deposits': typeof AuthenticatedAdminDepositsRoute
+  '/_authenticated/admin/disputes': typeof AuthenticatedAdminDisputesRoute
+  '/_authenticated/admin/games': typeof AuthenticatedAdminGamesRoute
+  '/_authenticated/admin/logs': typeof AuthenticatedAdminLogsRoute
+  '/_authenticated/admin/predictions': typeof AuthenticatedAdminPredictionsRoute
+  '/_authenticated/admin/tournaments': typeof AuthenticatedAdminTournamentsRoute
+  '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/admin/withdrawals': typeof AuthenticatedAdminWithdrawalsRoute
   '/_authenticated/challenges/create': typeof AuthenticatedChallengesCreateRoute
   '/_authenticated/wallet/deposit': typeof AuthenticatedWalletDepositRoute
@@ -196,6 +253,12 @@ export interface FileRouteTypes {
     | '/profile'
     | '/admin/banks'
     | '/admin/deposits'
+    | '/admin/disputes'
+    | '/admin/games'
+    | '/admin/logs'
+    | '/admin/predictions'
+    | '/admin/tournaments'
+    | '/admin/users'
     | '/admin/withdrawals'
     | '/challenges/create'
     | '/wallet/deposit'
@@ -214,6 +277,12 @@ export interface FileRouteTypes {
     | '/profile'
     | '/admin/banks'
     | '/admin/deposits'
+    | '/admin/disputes'
+    | '/admin/games'
+    | '/admin/logs'
+    | '/admin/predictions'
+    | '/admin/tournaments'
+    | '/admin/users'
     | '/admin/withdrawals'
     | '/challenges/create'
     | '/wallet/deposit'
@@ -234,6 +303,12 @@ export interface FileRouteTypes {
     | '/_authenticated/profile'
     | '/_authenticated/admin/banks'
     | '/_authenticated/admin/deposits'
+    | '/_authenticated/admin/disputes'
+    | '/_authenticated/admin/games'
+    | '/_authenticated/admin/logs'
+    | '/_authenticated/admin/predictions'
+    | '/_authenticated/admin/tournaments'
+    | '/_authenticated/admin/users'
     | '/_authenticated/admin/withdrawals'
     | '/_authenticated/challenges/create'
     | '/_authenticated/wallet/deposit'
@@ -367,6 +442,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminWithdrawalsRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/users': {
+      id: '/_authenticated/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/tournaments': {
+      id: '/_authenticated/admin/tournaments'
+      path: '/tournaments'
+      fullPath: '/admin/tournaments'
+      preLoaderRoute: typeof AuthenticatedAdminTournamentsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/predictions': {
+      id: '/_authenticated/admin/predictions'
+      path: '/predictions'
+      fullPath: '/admin/predictions'
+      preLoaderRoute: typeof AuthenticatedAdminPredictionsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/logs': {
+      id: '/_authenticated/admin/logs'
+      path: '/logs'
+      fullPath: '/admin/logs'
+      preLoaderRoute: typeof AuthenticatedAdminLogsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/games': {
+      id: '/_authenticated/admin/games'
+      path: '/games'
+      fullPath: '/admin/games'
+      preLoaderRoute: typeof AuthenticatedAdminGamesRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/disputes': {
+      id: '/_authenticated/admin/disputes'
+      path: '/disputes'
+      fullPath: '/admin/disputes'
+      preLoaderRoute: typeof AuthenticatedAdminDisputesRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/deposits': {
       id: '/_authenticated/admin/deposits'
       path: '/deposits'
@@ -387,6 +504,12 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminBanksRoute: typeof AuthenticatedAdminBanksRoute
   AuthenticatedAdminDepositsRoute: typeof AuthenticatedAdminDepositsRoute
+  AuthenticatedAdminDisputesRoute: typeof AuthenticatedAdminDisputesRoute
+  AuthenticatedAdminGamesRoute: typeof AuthenticatedAdminGamesRoute
+  AuthenticatedAdminLogsRoute: typeof AuthenticatedAdminLogsRoute
+  AuthenticatedAdminPredictionsRoute: typeof AuthenticatedAdminPredictionsRoute
+  AuthenticatedAdminTournamentsRoute: typeof AuthenticatedAdminTournamentsRoute
+  AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedAdminWithdrawalsRoute: typeof AuthenticatedAdminWithdrawalsRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
@@ -395,6 +518,12 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
   {
     AuthenticatedAdminBanksRoute: AuthenticatedAdminBanksRoute,
     AuthenticatedAdminDepositsRoute: AuthenticatedAdminDepositsRoute,
+    AuthenticatedAdminDisputesRoute: AuthenticatedAdminDisputesRoute,
+    AuthenticatedAdminGamesRoute: AuthenticatedAdminGamesRoute,
+    AuthenticatedAdminLogsRoute: AuthenticatedAdminLogsRoute,
+    AuthenticatedAdminPredictionsRoute: AuthenticatedAdminPredictionsRoute,
+    AuthenticatedAdminTournamentsRoute: AuthenticatedAdminTournamentsRoute,
+    AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
     AuthenticatedAdminWithdrawalsRoute: AuthenticatedAdminWithdrawalsRoute,
     AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   }
