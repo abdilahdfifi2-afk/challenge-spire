@@ -346,3 +346,103 @@ function statusColor(s: string) {
   if (s === "disputed" || s === "cancelled") return "bg-destructive/15 text-destructive";
   return "bg-muted text-muted-foreground";
 }
+
+function ResultSubmit({
+  challenge, creator, opponent, myResult, onSubmit, title,
+}: {
+  challenge: any; creator: any; opponent: any; myResult: any;
+  onSubmit: (winner: string, proofUrl?: string) => Promise<void>; title: string;
+}) {
+  const { user } = useAuth();
+  const [selectedWinner, setSelectedWinner] = useState<string | null>(null);
+  const [proofPath, setProofPath] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const upload = async (file: File) => {
+    if (!user) return;
+    if (file.size > 5 * 1024 * 1024) { toast.error("الحد الأقصى 5 ميغابايت"); return; }
+    setUploading(true);
+    const ext = file.name.split(".").pop() || "jpg";
+    const path = `proof/${challenge.id}/${user.id}-${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from("proofs").upload(path, file, { upsert: false, contentType: file.type });
+    setUploading(false);
+    if (error) { toast.error(error.message); return; }
+    setProofPath(path);
+    toast.success("تم رفع الإثبات");
+  };
+
+  const doSubmit = async (winner: string) => {
+    setSelectedWinner(winner);
+    setSubmitting(true);
+    await onSubmit(winner, proofPath ?? undefined);
+    setSubmitting(false);
+  };
+
+  if (myResult) {
+    return (
+      <div className="mt-5 rounded-md border border-primary/30 bg-primary/5 p-4">
+        <div className="flex items-center gap-2 text-sm font-semibold mb-2">
+          <Trophy className="h-4 w-4 text-primary" /> {title}
+        </div>
+        <div className="text-xs text-muted-foreground">
+          قدّمت نتيجتك: الفائز = <span className="font-semibold text-foreground">
+            {myResult.claimed_winner === challenge.creator_id
+              ? (creator?.display_name || creator?.username)
+              : (opponent?.display_name || opponent?.username)}
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-5 rounded-md border border-primary/30 bg-primary/5 p-4">
+      <div className="flex items-center gap-2 text-sm font-semibold mb-3">
+        <Trophy className="h-4 w-4 text-primary" /> {title}
+      </div>
+      <p className="text-xs text-muted-foreground mb-3">
+        اختر الفائز. يُنصح برفع لقطة شاشة للنتيجة كإثبات في حال حدوث نزاع.
+      </p>
+
+      <div className="mb-3">
+        <input
+          ref={fileRef} type="file" accept="image/*" className="hidden"
+          onChange={(e) => { const f = e.target.files?.[0]; if (f) upload(f); e.target.value = ""; }}
+        />
+        <Button
+          type="button" variant="outline" size="sm"
+          onClick={() => fileRef.current?.click()}
+          disabled={uploading}
+          className="w-full gap-2"
+        >
+          {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ImagePlus className="h-4 w-4" />}
+          {proofPath ? "استبدال الإثبات" : "رفع لقطة شاشة كإثبات (اختياري)"}
+        </Button>
+        {proofPath && (
+          <div className="mt-2 text-[11px] text-success flex items-center gap-1">
+            <CheckCircle2 className="h-3 w-3" /> تم رفع الإثبات
+          </div>
+        )}
+      </div>
+
+      <div className="grid grid-cols-2 gap-2">
+        <Button
+          size="sm" onClick={() => doSubmit(challenge.creator_id)}
+          disabled={submitting}
+        >
+          {submitting && selectedWinner === challenge.creator_id ? <Loader2 className="h-4 w-4 animate-spin" /> : `ربح: ${creator?.display_name || creator?.username || "المُنشئ"}`}
+        </Button>
+        {challenge.opponent_id && (
+          <Button
+            size="sm" onClick={() => doSubmit(challenge.opponent_id)}
+            disabled={submitting}
+          >
+            {submitting && selectedWinner === challenge.opponent_id ? <Loader2 className="h-4 w-4 animate-spin" /> : `ربح: ${opponent?.display_name || opponent?.username || "الخصم"}`}
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}
