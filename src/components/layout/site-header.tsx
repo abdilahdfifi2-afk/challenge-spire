@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { NotificationsMenu } from "./notifications-menu";
+import logoAsset from "@/assets/arenax-logo.png.asset.json";
+
 
 const nav = [
   { to: "/", label: "الرئيسية", icon: Home },
@@ -25,14 +27,19 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 backdrop-blur-xl bg-background/70 border-b border-border">
       <div className="mx-auto max-w-7xl px-4 h-16 flex items-center justify-between gap-4">
         <div className="flex items-center gap-8">
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="h-9 w-9 rounded-lg gradient-primary glow-primary grid place-items-center font-display font-bold text-primary-foreground text-lg">
-              A
-            </div>
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <img
+              src={logoAsset.url}
+              alt="ArenaX"
+              width={36}
+              height={36}
+              className="h-9 w-9 drop-shadow-[0_0_12px_oklch(0.65_0.24_295_/_0.55)] group-hover:scale-110 transition-transform"
+            />
             <span className="font-display font-bold text-xl tracking-tight">
               <span className="text-gradient-primary">ArenaX</span>
             </span>
           </Link>
+
           <nav className="hidden md:flex items-center gap-1">
             {nav.map((n) => {
               const active = pathname === n.to;

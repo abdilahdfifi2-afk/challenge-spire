@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { formatCurrency, formatDate } from "@/lib/format";
 import { gameCover, pickBanner, TOURNAMENT_BANNERS } from "@/lib/media";
+import logoAsset from "@/assets/arenax-logo.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -312,10 +313,18 @@ function Hero() {
       <div className="absolute top-1/2 start-1/2 -translate-x-1/2 -translate-y-1/2 h-80 w-80 rounded-full bg-neon/25 blur-3xl animate-float-slow" style={{ animationDelay: "-6s" }} />
 
       <div className="relative mx-auto max-w-7xl px-4 py-20 md:py-28 text-center w-full">
+        <img
+          src={logoAsset.url}
+          alt="ArenaX"
+          width={128}
+          height={128}
+          className="mx-auto h-24 w-24 md:h-32 md:w-32 mb-6 drop-shadow-[0_0_40px_oklch(0.65_0.24_295_/_0.7)] animate-float-slow"
+        />
         <div className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 backdrop-blur px-4 py-1.5 text-xs text-primary mb-8 animate-fade-in">
           <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
           <Zap className="h-3.5 w-3.5" /> منصة الألعاب التنافسية رقم 1 في المغرب
         </div>
+
 
         <h1 className="font-display font-black leading-[0.95] tracking-tight">
           <span className="block text-4xl md:text-7xl lg:text-8xl opacity-0 animate-fade-in" style={{ animationDelay: "0.1s", animationFillMode: "forwards" }}>نافس.</span>
