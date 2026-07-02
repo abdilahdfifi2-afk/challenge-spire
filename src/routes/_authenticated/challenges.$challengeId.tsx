@@ -104,8 +104,8 @@ function ChallengeDetailPage() {
     toast.success("تم الإلغاء وإعادة الرسوم إلى محفظتك");
   };
 
-  const submitResult = async (winner: string) => {
-    const { data, error } = await supabase.rpc("submit_challenge_result", { _challenge_id: c.id, _winner: winner });
+  const submitResult = async (winner: string, proofUrl?: string) => {
+    const { data, error } = await supabase.rpc("submit_challenge_result", { _challenge_id: c.id, _winner: winner, _proof_url: proofUrl ?? null });
     if (error) { toast.error(translateFinancialError(error.message)); return; }
     qc.invalidateQueries({ queryKey: ["challenge-my-result", challengeId] });
     if (data === "settled") toast.success("تمت التسوية — تم توزيع الجائزة");
