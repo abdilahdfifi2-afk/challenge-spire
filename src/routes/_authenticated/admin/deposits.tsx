@@ -21,11 +21,18 @@ function DepositsAdmin() {
   const list = useQuery({
     queryKey: ["admin-deposits", filter],
     queryFn: async () => {
-      let q = supabase.from("deposits").select("*, profiles!deposits_user_id_fkey(username, display_name), banks(name)").order("created_at", { ascending: false });
+      let q = supabase.from("deposits").select("*, banks(name)").order("created_at", { ascending: false });
       if (filter !== "all") q = q.eq("status", filter);
-      const { data } = await q;
-      return data ?? [];
+      const { data, error } = await q;
+      if (error) throw error;
+      const items = data ?? [];
+      const ids = [...new Set(items.map((i: any) => i.user_id))];
+      if (ids.length === 0) return items;
+      const { data: profs } = await supabase.from("profiles").select("id,username,display_name,avatar_url").in("id", ids);
+      const map = new Map((profs ?? []).map((p: any) => [p.id, p]));
+      return items.map((i: any) => ({ ...i, profiles: map.get(i.user_id) }));
     },
+    refetchInterval: 15000,
   });
 
   const viewProof = async (path: string) => {
