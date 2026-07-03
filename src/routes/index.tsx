@@ -56,10 +56,23 @@ function HomePage() {
   });
   const winners = useQuery({
     queryKey: ["home-winners"],
-    queryFn: async () => (await supabase.from("activity_feed")
-      .select("id,user_id,type,title,body,meta,created_at,profiles(username,display_name,avatar_url)")
-      .in("type", ["challenge_win", "tournament_win", "prediction_win"])
-      .order("created_at", { ascending: false }).limit(12)).data ?? [],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("activity_feed")
+        .select("id,user_id,type,title,body,meta,created_at")
+        .in("type", ["challenge_win", "tournament_win", "prediction_win"])
+        .order("created_at", { ascending: false })
+        .limit(12);
+      const items = data ?? [];
+      if (items.length === 0) return [] as any[];
+      const ids = [...new Set(items.map((i) => i.user_id))];
+      const { data: profs } = await supabase
+        .from("profiles")
+        .select("id,username,display_name,avatar_url")
+        .in("id", ids);
+      const map = new Map((profs ?? []).map((p) => [p.id, p]));
+      return items.map((i) => ({ ...i, profiles: map.get(i.user_id) }));
+    },
   });
   const stats = useQuery({
     queryKey: ["home-stats"],
