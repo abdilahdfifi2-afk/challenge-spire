@@ -1302,6 +1302,27 @@ export type Database = {
       }
       admin_delete_market: { Args: { _market_id: string }; Returns: undefined }
       admin_delete_match: { Args: { _match_id: string }; Returns: undefined }
+      admin_list_deposits: {
+        Args: { _status?: string }
+        Returns: {
+          admin_note: string
+          amount: number
+          avatar_url: string
+          bank_id: string
+          bank_name: string
+          created_at: string
+          currency: string
+          display_name: string
+          id: string
+          processed_at: string
+          processed_by: string
+          proof_url: string
+          status: string
+          updated_at: string
+          user_id: string
+          username: string
+        }[]
+      }
       admin_reject_deposit: {
         Args: { _deposit_id: string; _note: string }
         Returns: undefined
