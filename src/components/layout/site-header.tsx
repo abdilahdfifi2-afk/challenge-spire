@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { NotificationsMenu } from "./notifications-menu";
+import { PwaInstallButton } from "@/components/pwa-install-button";
 import logoAsset from "@/assets/arenax-logo.png.asset.json";
 
 
@@ -61,6 +62,7 @@ export function SiteHeader() {
         </div>
 
         <div className="flex items-center gap-2">
+          <PwaInstallButton />
           {user ? (
             <>
               <NotificationsMenu />

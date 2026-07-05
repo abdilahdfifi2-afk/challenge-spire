@@ -5,7 +5,7 @@ import { formatCurrency, formatDate } from "@/lib/format";
 import { gameCover, pickBanner, TOURNAMENT_BANNERS } from "@/lib/media";
 import { Trophy, Users } from "lucide-react";
 
-export const Route = createFileRoute("/tournaments")({
+export const Route = createFileRoute("/tournaments/")({
   head: () => ({ meta: [{ title: "البطولات — ArenaX" }] }),
   component: TournamentsPage,
 });

@@ -24,7 +24,7 @@ function ChallengesPage() {
     queryFn: async () => {
       const { data } = await supabase
         .from("challenges")
-        .select("*, games(name,slug), creator:profiles!challenges_creator_id_fkey(username, display_name)")
+        .select("*, games(name,slug), creator:profiles!challenges_creator_profile_fkey(username, display_name)")
         .order("created_at", { ascending: false })
         .limit(50);
       return data ?? [];

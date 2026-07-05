@@ -9,9 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TournamentsRouteImport } from './routes/tournaments'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
-import { Route as PredictionsRouteImport } from './routes/predictions'
 import { Route as LeaderboardRouteImport } from './routes/leaderboard'
 import { Route as KingOfArenaRouteImport } from './routes/king-of-arena'
 import { Route as FeedRouteImport } from './routes/feed'
@@ -20,6 +18,8 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AchievementsRouteImport } from './routes/achievements'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TournamentsIndexRouteImport } from './routes/tournaments.index'
+import { Route as PredictionsIndexRouteImport } from './routes/predictions.index'
 import { Route as TournamentsTournamentIdRouteImport } from './routes/tournaments.$tournamentId'
 import { Route as PredictionsMatchIdRouteImport } from './routes/predictions.$matchId'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
@@ -44,19 +44,9 @@ import { Route as AuthenticatedAdminDepositsRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminBanksRouteImport } from './routes/_authenticated/admin/banks'
 import { Route as AuthenticatedAdminAnalyticsRouteImport } from './routes/_authenticated/admin/analytics'
 
-const TournamentsRoute = TournamentsRouteImport.update({
-  id: '/tournaments',
-  path: '/tournaments',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PredictionsRoute = PredictionsRouteImport.update({
-  id: '/predictions',
-  path: '/predictions',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LeaderboardRoute = LeaderboardRouteImport.update({
@@ -98,15 +88,25 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TournamentsIndexRoute = TournamentsIndexRouteImport.update({
+  id: '/tournaments/',
+  path: '/tournaments/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PredictionsIndexRoute = PredictionsIndexRouteImport.update({
+  id: '/predictions/',
+  path: '/predictions/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TournamentsTournamentIdRoute = TournamentsTournamentIdRouteImport.update({
-  id: '/$tournamentId',
-  path: '/$tournamentId',
-  getParentRoute: () => TournamentsRoute,
+  id: '/tournaments/$tournamentId',
+  path: '/tournaments/$tournamentId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const PredictionsMatchIdRoute = PredictionsMatchIdRouteImport.update({
-  id: '/$matchId',
-  path: '/$matchId',
-  getParentRoute: () => PredictionsRoute,
+  id: '/predictions/$matchId',
+  path: '/predictions/$matchId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   id: '/profile',
@@ -235,14 +235,14 @@ export interface FileRoutesByFullPath {
   '/feed': typeof FeedRoute
   '/king-of-arena': typeof KingOfArenaRoute
   '/leaderboard': typeof LeaderboardRoute
-  '/predictions': typeof PredictionsRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
-  '/tournaments': typeof TournamentsRouteWithChildren
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/friends': typeof AuthenticatedFriendsRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/predictions/$matchId': typeof PredictionsMatchIdRoute
   '/tournaments/$tournamentId': typeof TournamentsTournamentIdRoute
+  '/predictions/': typeof PredictionsIndexRoute
+  '/tournaments/': typeof TournamentsIndexRoute
   '/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/admin/banks': typeof AuthenticatedAdminBanksRoute
   '/admin/deposits': typeof AuthenticatedAdminDepositsRoute
@@ -270,13 +270,13 @@ export interface FileRoutesByTo {
   '/feed': typeof FeedRoute
   '/king-of-arena': typeof KingOfArenaRoute
   '/leaderboard': typeof LeaderboardRoute
-  '/predictions': typeof PredictionsRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
-  '/tournaments': typeof TournamentsRouteWithChildren
   '/friends': typeof AuthenticatedFriendsRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/predictions/$matchId': typeof PredictionsMatchIdRoute
   '/tournaments/$tournamentId': typeof TournamentsTournamentIdRoute
+  '/predictions': typeof PredictionsIndexRoute
+  '/tournaments': typeof TournamentsIndexRoute
   '/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/admin/banks': typeof AuthenticatedAdminBanksRoute
   '/admin/deposits': typeof AuthenticatedAdminDepositsRoute
@@ -306,14 +306,14 @@ export interface FileRoutesById {
   '/feed': typeof FeedRoute
   '/king-of-arena': typeof KingOfArenaRoute
   '/leaderboard': typeof LeaderboardRoute
-  '/predictions': typeof PredictionsRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
-  '/tournaments': typeof TournamentsRouteWithChildren
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/_authenticated/friends': typeof AuthenticatedFriendsRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/predictions/$matchId': typeof PredictionsMatchIdRoute
   '/tournaments/$tournamentId': typeof TournamentsTournamentIdRoute
+  '/predictions/': typeof PredictionsIndexRoute
+  '/tournaments/': typeof TournamentsIndexRoute
   '/_authenticated/admin/analytics': typeof AuthenticatedAdminAnalyticsRoute
   '/_authenticated/admin/banks': typeof AuthenticatedAdminBanksRoute
   '/_authenticated/admin/deposits': typeof AuthenticatedAdminDepositsRoute
@@ -343,14 +343,14 @@ export interface FileRouteTypes {
     | '/feed'
     | '/king-of-arena'
     | '/leaderboard'
-    | '/predictions'
     | '/reset-password'
-    | '/tournaments'
     | '/admin'
     | '/friends'
     | '/profile'
     | '/predictions/$matchId'
     | '/tournaments/$tournamentId'
+    | '/predictions/'
+    | '/tournaments/'
     | '/admin/analytics'
     | '/admin/banks'
     | '/admin/deposits'
@@ -378,13 +378,13 @@ export interface FileRouteTypes {
     | '/feed'
     | '/king-of-arena'
     | '/leaderboard'
-    | '/predictions'
     | '/reset-password'
-    | '/tournaments'
     | '/friends'
     | '/profile'
     | '/predictions/$matchId'
     | '/tournaments/$tournamentId'
+    | '/predictions'
+    | '/tournaments'
     | '/admin/analytics'
     | '/admin/banks'
     | '/admin/deposits'
@@ -413,14 +413,14 @@ export interface FileRouteTypes {
     | '/feed'
     | '/king-of-arena'
     | '/leaderboard'
-    | '/predictions'
     | '/reset-password'
-    | '/tournaments'
     | '/_authenticated/admin'
     | '/_authenticated/friends'
     | '/_authenticated/profile'
     | '/predictions/$matchId'
     | '/tournaments/$tournamentId'
+    | '/predictions/'
+    | '/tournaments/'
     | '/_authenticated/admin/analytics'
     | '/_authenticated/admin/banks'
     | '/_authenticated/admin/deposits'
@@ -450,32 +450,20 @@ export interface RootRouteChildren {
   FeedRoute: typeof FeedRoute
   KingOfArenaRoute: typeof KingOfArenaRoute
   LeaderboardRoute: typeof LeaderboardRoute
-  PredictionsRoute: typeof PredictionsRouteWithChildren
   ResetPasswordRoute: typeof ResetPasswordRoute
-  TournamentsRoute: typeof TournamentsRouteWithChildren
+  PredictionsMatchIdRoute: typeof PredictionsMatchIdRoute
+  TournamentsTournamentIdRoute: typeof TournamentsTournamentIdRoute
+  PredictionsIndexRoute: typeof PredictionsIndexRoute
+  TournamentsIndexRoute: typeof TournamentsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/tournaments': {
-      id: '/tournaments'
-      path: '/tournaments'
-      fullPath: '/tournaments'
-      preLoaderRoute: typeof TournamentsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/reset-password': {
       id: '/reset-password'
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/predictions': {
-      id: '/predictions'
-      path: '/predictions'
-      fullPath: '/predictions'
-      preLoaderRoute: typeof PredictionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/leaderboard': {
@@ -534,19 +522,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tournaments/': {
+      id: '/tournaments/'
+      path: '/tournaments'
+      fullPath: '/tournaments/'
+      preLoaderRoute: typeof TournamentsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/predictions/': {
+      id: '/predictions/'
+      path: '/predictions'
+      fullPath: '/predictions/'
+      preLoaderRoute: typeof PredictionsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tournaments/$tournamentId': {
       id: '/tournaments/$tournamentId'
-      path: '/$tournamentId'
+      path: '/tournaments/$tournamentId'
       fullPath: '/tournaments/$tournamentId'
       preLoaderRoute: typeof TournamentsTournamentIdRouteImport
-      parentRoute: typeof TournamentsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/predictions/$matchId': {
       id: '/predictions/$matchId'
-      path: '/$matchId'
+      path: '/predictions/$matchId'
       fullPath: '/predictions/$matchId'
       preLoaderRoute: typeof PredictionsMatchIdRouteImport
-      parentRoute: typeof PredictionsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/profile': {
       id: '/_authenticated/profile'
@@ -762,30 +764,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
-interface PredictionsRouteChildren {
-  PredictionsMatchIdRoute: typeof PredictionsMatchIdRoute
-}
-
-const PredictionsRouteChildren: PredictionsRouteChildren = {
-  PredictionsMatchIdRoute: PredictionsMatchIdRoute,
-}
-
-const PredictionsRouteWithChildren = PredictionsRoute._addFileChildren(
-  PredictionsRouteChildren,
-)
-
-interface TournamentsRouteChildren {
-  TournamentsTournamentIdRoute: typeof TournamentsTournamentIdRoute
-}
-
-const TournamentsRouteChildren: TournamentsRouteChildren = {
-  TournamentsTournamentIdRoute: TournamentsTournamentIdRoute,
-}
-
-const TournamentsRouteWithChildren = TournamentsRoute._addFileChildren(
-  TournamentsRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
@@ -795,20 +773,12 @@ const rootRouteChildren: RootRouteChildren = {
   FeedRoute: FeedRoute,
   KingOfArenaRoute: KingOfArenaRoute,
   LeaderboardRoute: LeaderboardRoute,
-  PredictionsRoute: PredictionsRouteWithChildren,
   ResetPasswordRoute: ResetPasswordRoute,
-  TournamentsRoute: TournamentsRouteWithChildren,
+  PredictionsMatchIdRoute: PredictionsMatchIdRoute,
+  TournamentsTournamentIdRoute: TournamentsTournamentIdRoute,
+  PredictionsIndexRoute: PredictionsIndexRoute,
+  TournamentsIndexRoute: TournamentsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

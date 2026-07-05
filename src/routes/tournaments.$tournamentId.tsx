@@ -30,7 +30,7 @@ function TournamentDetailPage() {
     queryKey: ["tournament-participants", tournamentId],
     queryFn: async () => {
       const { data } = await supabase.from("tournament_participants")
-        .select("user_id, placement, profiles!tournament_participants_user_id_fkey(username, display_name, avatar_url)")
+        .select("user_id, placement, profiles!tournament_participants_user_profile_fkey(username, display_name, avatar_url)")
         .eq("tournament_id", tournamentId);
       return data ?? [];
     },
