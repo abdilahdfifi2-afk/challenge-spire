@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { formatCurrency, formatDate } from "@/lib/format";
 import { Target, Radio, Clock, Trophy, Users, Flame, TrendingUp, Zap, CheckCircle2 } from "lucide-react";
 
-export const Route = createFileRoute("/predictions")({
+export const Route = createFileRoute("/predictions/")({
   head: () => ({
     meta: [
       { title: "التوقعات الرياضية والإلكترونية — ArenaX" },
