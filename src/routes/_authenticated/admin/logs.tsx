@@ -10,7 +10,7 @@ export const Route = createFileRoute("/_authenticated/admin/logs")({
 function LogsAdmin() {
   const list = useQuery({
     queryKey: ["admin-logs"],
-    queryFn: async () => (await supabase.from("audit_logs").select("*, profiles!audit_logs_actor_id_fkey(username)").order("created_at", { ascending: false }).limit(200)).data ?? [],
+    queryFn: async () => (await supabase.from("audit_logs").select("*, profiles!audit_logs_actor_profile_fkey(username)").order("created_at", { ascending: false }).limit(200)).data ?? [],
   });
   return (
     <div>
